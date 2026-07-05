@@ -4,847 +4,121 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Processwallah AI Document Hub</title>
-    <!-- Google Fonts & Tailwind CSS CDN -->
+    
+    <!-- Fonts & Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#5E35B1',
-                        secondary: '#673AB7',
-                        accent: '#7E57C2',
-                        background: '#F5F7FA',
-                        sidebar: '#FFFFFF',
-                        card: '#FFFFFF'
-                    },
-                    borderRadius: {
-                        'enterprise': '14px'
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .material-symbols-rounded {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .active-nav {
-            background-color: #F5F7FA;
-            color: #5E35B1;
-            font-weight: 600;
-            border-left: 4px solid #5E35B1;
-        }
-        /* Custom scrollbar styling for enterprise grids */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #F1F1F1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #C1C1C1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #A8A8A8;
-        }
-    </style>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body class="bg-[#F5F7FA] text-slate-800 font-sans min-h-screen flex flex-col overflow-x-hidden">
+<body>
 
-    <!-- App Shell Container -->
-    <div class="flex flex-1 h-screen overflow-hidden">
+    <div class="app-container">
         
-        <!-- 1. LEFT SIDEBAR -->
-        <aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 hidden md:flex">
-            <div>
-                <!-- Logo & Brand Header -->
-                <div class="p-6 border-b border-slate-100 flex items-center gap-3">
-                    <div class="h-10 w-10 bg-[#5E35B1] rounded-[14px] flex items-center justify-center text-white">
-                        <span class="material-symbols-rounded text-2xl">neurology</span>
-                    </div>
-                    <div>
-                        <h1 class="font-bold text-slate-900 tracking-tight leading-none text-base">Processwallah</h1>
-                        <span class="text-[11px] text-[#7E57C2] font-semibold uppercase tracking-wider">AI Document Hub</span>
-                    </div>
+        <!-- Sidebar Navigation -->
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <span class="material-symbols-rounded">neurology</span>
                 </div>
-
-                <!-- Navigation Links -->
-                <nav class="p-4 space-y-1">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item active-nav w-full flex items-center gap-3 px-4 py-3 rounded-[14px] text-slate-600 hover:bg-slate-50 transition-colors text-sm">
-                        <span class="material-symbols-rounded">dashboard</span>
-                        <span>Dashboard</span>
-                    </button>
-                    <button onclick="switchTab('sales')" id="nav-sales" class="nav-item w-full flex items-center justify-between px-4 py-3 rounded-[14px] text-slate-600 hover:bg-slate-50 transition-colors text-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="material-symbols-rounded">description</span>
-                            <span>Sales Invoices</span>
-                        </div>
-                        <span class="bg-indigo-100 text-[#5E35B1] text-[10px] font-bold px-2 py-0.5 rounded-full">4 New</span>
-                    </button>
-                    <button onclick="switchTab('purchase')" id="nav-purchase" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-[14px] text-slate-600 hover:bg-slate-50 transition-colors text-sm">
-                        <span class="material-symbols-rounded">receipt</span>
-                        <span>Purchase Bills</span>
-                    </button>
-                    <button onclick="switchTab('masters')" id="nav-masters" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-[14px] text-slate-600 hover:bg-slate-50 transition-colors text-sm">
-                        <span class="material-symbols-rounded">database</span>
-                        <span>Masters</span>
-                    </button>
-                    <button onclick="switchTab('settings')" id="nav-settings" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-[14px] text-slate-600 hover:bg-slate-50 transition-colors text-sm">
-                        <span class="material-symbols-rounded">settings</span>
-                        <span>Settings</span>
-                    </button>
-                </nav>
+                <div class="brand-info">
+                    <h1 class="brand-name">Processwallah</h1>
+                    <span class="brand-tag">AI Document Hub</span>
+                </div>
             </div>
 
-            <!-- Footer Meta Info -->
-            <div class="p-4 border-t border-slate-100 bg-slate-50">
-                <div class="flex items-center gap-3 mb-2">
-                    <span class="relative flex h-2 w-2">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span class="text-xs font-medium text-slate-500">Gemini-1.5-Flash Active</span>
+            <nav class="sidebar-nav">
+                <a href="#/dashboard" class="nav-link active" id="nav-dashboard">
+                    <span class="material-symbols-rounded">dashboard</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                
+                <div class="nav-group-label">Sales Department</div>
+                <a href="#/sales-upload" class="nav-link" id="nav-sales-upload">
+                    <span class="material-symbols-rounded">upload_file</span>
+                    <span class="nav-label">AI Upload</span>
+                </a>
+                <a href="#/sales-register" class="nav-link" id="nav-sales-register">
+                    <span class="material-symbols-rounded">analytics</span>
+                    <span class="nav-label">Sales Register</span>
+                </a>
+
+                <div class="nav-group-label">Purchase Department</div>
+                <a href="#/purchase-upload" class="nav-link" id="nav-purchase-upload">
+                    <span class="material-symbols-rounded">receipt_long</span>
+                    <span class="nav-label">Bill Upload</span>
+                </a>
+                <a href="#/purchase-register" class="nav-link" id="nav-purchase-register">
+                    <span class="material-symbols-rounded">payments</span>
+                    <span class="nav-label">Purchase Register</span>
+                </a>
+
+                <div class="nav-group-label">System</div>
+                <a href="#/masters" class="nav-link" id="nav-masters">
+                    <span class="material-symbols-rounded">database</span>
+                    <span class="nav-label">Masters</span>
+                </a>
+                <a href="#/settings" class="nav-link" id="nav-settings">
+                    <span class="material-symbols-rounded">settings</span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">Gemini Engine Ready</span>
                 </div>
-                <p class="text-[11px] text-slate-400 leading-tight">Target: Google Sheet Database</p>
             </div>
         </aside>
 
-        <!-- Main Workspace Area -->
-        <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Main Content Area -->
+        <div class="main-layout">
             
-            <!-- 2. TOP HEADER -->
-            <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
-                <!-- Breadcrumb Title -->
-                <div class="flex items-center gap-3">
-                    <button class="md:hidden text-slate-600 p-1 rounded-lg hover:bg-slate-100">
+            <!-- Global Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Menu">
                         <span class="material-symbols-rounded">menu</span>
                     </button>
-                    <div>
-                        <span class="text-xs text-slate-400 font-medium">Workspace</span>
-                        <h2 id="page-title" class="text-base font-semibold text-slate-800 leading-none">Dashboard</h2>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-parent">Workspace</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current" id="currentBreadcrumb">Dashboard</span>
                     </div>
                 </div>
 
-                <!-- Global Quick Stats / Profile -->
-                <div class="flex items-center gap-6">
-                    <!-- Session Speed Stat -->
-                    <div class="hidden lg:flex items-center gap-2 bg-indigo-50 px-3 py-1.5 rounded-full border border-indigo-100">
-                        <span class="material-symbols-rounded text-indigo-600 text-lg">bolt</span>
-                        <span class="text-xs font-semibold text-indigo-900">Avg. Entry: <span class="text-[#5E35B1]">1m 45s</span></span>
+                <div class="header-right">
+                    <div class="session-stat">
+                        <span class="material-symbols-rounded text-accent">bolt</span>
+                        <span class="stat-lbl">Session Avg: <strong id="sessionAvg">1m 45s</strong></span>
                     </div>
-
-                    <!-- User Information -->
-                    <div class="flex items-center gap-3">
-                        <div class="text-right hidden sm:block">
-                            <span class="text-xs font-semibold text-slate-700 block">Finance Operations</span>
-                            <span class="text-[10px] text-slate-400 block">finance-ops@company.com</span>
+                    
+                    <div class="user-profile">
+                        <div class="profile-details">
+                            <span class="profile-name">Finance Operations</span>
+                            <span class="profile-role">Department Admin</span>
                         </div>
-                        <div class="h-9 w-9 rounded-[14px] bg-slate-100 border border-slate-200 flex items-center justify-center text-[#5E35B1] font-bold text-sm">
-                            FO
-                        </div>
+                        <div class="profile-avatar">FO</div>
                     </div>
                 </div>
             </header>
 
-            <!-- 3. PAGE CONTENT CONTAINER -->
-            <div class="flex-1 overflow-y-auto p-6 space-y-6">
-
-                <!-- PAGE 1: DASHBOARD -->
-                <div id="tab-dashboard" class="tab-content space-y-6">
-                    <!-- Stat Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
-                        <div class="bg-white p-5 rounded-[14px] border border-slate-200 flex items-center justify-between shadow-sm">
-                            <div>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Total Uploads</span>
-                                <h3 class="text-2xl font-bold text-slate-800">1,248</h3>
-                                <span class="text-xs text-emerald-600 flex items-center gap-1 mt-1 font-medium">
-                                    <span class="material-symbols-rounded text-sm">arrow_upward</span> +12% this week
-                                </span>
-                            </div>
-                            <div class="h-12 w-12 bg-indigo-50 rounded-[14px] flex items-center justify-center text-[#5E35B1]">
-                                <span class="material-symbols-rounded text-2xl">cloud_upload</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-[14px] border border-slate-200 flex items-center justify-between shadow-sm">
-                            <div>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Avg. Review Time</span>
-                                <h3 class="text-2xl font-bold text-slate-800">1m 52s</h3>
-                                <span class="text-xs text-indigo-600 flex items-center gap-1 mt-1 font-medium">
-                                    <span class="material-symbols-rounded text-sm">offline_bolt</span> Saved 3m 08s / doc
-                                </span>
-                            </div>
-                            <div class="h-12 w-12 bg-violet-50 rounded-[14px] flex items-center justify-center text-[#673AB7]">
-                                <span class="material-symbols-rounded text-2xl">avg_time</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-[14px] border border-slate-200 flex items-center justify-between shadow-sm">
-                            <div>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Extraction Accuracy</span>
-                                <h3 class="text-2xl font-bold text-slate-800">94.2%</h3>
-                                <span class="text-xs text-slate-500 block mt-1">Based on Gemini confidence</span>
-                            </div>
-                            <div class="h-12 w-12 bg-emerald-50 rounded-[14px] flex items-center justify-center text-emerald-600">
-                                <span class="material-symbols-rounded text-2xl">verified</span>
-                            </div>
-                        </div>
-
-                        <div class="bg-white p-5 rounded-[14px] border border-slate-200 flex items-center justify-between shadow-sm">
-                            <div>
-                                <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider block mb-1">Pending Sync</span>
-                                <h3 class="text-2xl font-bold text-slate-800">9 Docs</h3>
-                                <span class="text-xs text-[#7E57C2] flex items-center gap-1 mt-1 font-medium">
-                                    <span class="material-symbols-rounded text-sm">hourglass_empty</span> Ready for validation
-                                </span>
-                            </div>
-                            <div class="h-12 w-12 bg-amber-50 rounded-[14px] flex items-center justify-center text-amber-600">
-                                <span class="material-symbols-rounded text-2xl">pending_actions</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Workflow Tracking Section -->
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Recent Activity / Queue -->
-                        <div class="bg-white rounded-[14px] border border-slate-200 shadow-sm lg:col-span-2">
-                            <div class="p-5 border-b border-slate-100 flex items-center justify-between">
-                                <h3 class="font-bold text-slate-800 text-sm">Processing Pipeline Queue</h3>
-                                <span class="text-xs text-[#5E35B1] font-semibold hover:underline cursor-pointer">View All</span>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-left text-xs">
-                                    <thead class="bg-slate-50 text-slate-500 uppercase font-semibold border-b border-slate-100">
-                                        <tr>
-                                            <th class="px-5 py-3">Document ID</th>
-                                            <th class="px-5 py-3">Vendor / Entity</th>
-                                            <th class="px-5 py-3">Upload Date</th>
-                                            <th class="px-5 py-3">Confidence</th>
-                                            <th class="px-5 py-3">Status</th>
-                                            <th class="px-5 py-3 text-right">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-100">
-                                        <tr>
-                                            <td class="px-5 py-4 font-semibold text-slate-700">INV-2025-0041</td>
-                                            <td class="px-5 py-4">Acme Tech Solutions</td>
-                                            <td class="px-5 py-4 text-slate-500">Today, 10:45 AM</td>
-                                            <td class="px-5 py-4">
-                                                <div class="flex items-center gap-2">
-                                                    <div class="w-12 bg-slate-200 rounded-full h-1.5">
-                                                        <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 96%"></div>
-                                                    </div>
-                                                    <span class="text-emerald-600 font-bold">96%</span>
-                                                </div>
-                                            </td>
-                                            <td class="px-5 py-4">
-                                                <span class="bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-medium text-[10px]">Review Pending</span>
-                                            </td>
-                                            <td class="px-5 py-4 text-right">
-                                                <button onclick="switchTab('sales')" class="bg-[#5E35B1] text-white px-3 py-1 rounded-[8px] font-medium hover:bg-[#673AB7] transition-all">Review</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-5 py-4 font-semibold text-slate-700">PO-8849-01</td>
-                                            <td class="px-5 py-4">Global Logistics Inc.</td>
-                                            <td class="px-5 py-4 text-slate-500">Yesterday</td>
-                                            <td class="px-5 py-4">
-                                                <div class="flex items-center gap-2">
-                                                    <div class="w-12 bg-slate-200 rounded-full h-1.5">
-                                                        <div class="bg-yellow-500 h-1.5 rounded-full" style="width: 74%"></div>
-                                                    </div>
-                                                    <span class="text-yellow-600 font-bold">74%</span>
-                                                </div>
-                                            </td>
-                                            <td class="px-5 py-4">
-                                                <span class="bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full font-medium text-[10px]">Low Confidence</span>
-                                            </td>
-                                            <td class="px-5 py-4 text-right">
-                                                <button onclick="switchTab('purchase')" class="bg-[#5E35B1] text-white px-3 py-1 rounded-[8px] font-medium hover:bg-[#673AB7] transition-all">Review</button>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="px-5 py-4 font-semibold text-slate-700">INV-2025-0040</td>
-                                            <td class="px-5 py-4">Nvidia Corp India</td>
-                                            <td class="px-5 py-4 text-slate-500">Yesterday</td>
-                                            <td class="px-5 py-4">
-                                                <div class="flex items-center gap-2">
-                                                    <div class="w-12 bg-slate-200 rounded-full h-1.5">
-                                                        <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 98%"></div>
-                                                    </div>
-                                                    <span class="text-emerald-600 font-bold">98%</span>
-                                                </div>
-                                            </td>
-                                            <td class="px-5 py-4">
-                                                <span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-medium text-[10px]">Synced to Sheets</span>
-                                            </td>
-                                            <td class="px-5 py-4 text-right">
-                                                <button class="text-slate-400 hover:text-[#5E35B1]"><span class="material-symbols-rounded text-base">visibility</span></button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Side Metric Box (AI Insights) -->
-                        <div class="bg-white rounded-[14px] border border-slate-200 p-5 shadow-sm space-y-4">
-                            <h3 class="font-bold text-slate-800 text-sm">System Insights</h3>
-                            <div class="bg-indigo-50 p-4 rounded-[14px] border border-indigo-100 space-y-2">
-                                <div class="flex items-center gap-2 text-[#5E35B1] font-semibold text-xs">
-                                    <span class="material-symbols-rounded text-base">auto_awesome</span>
-                                    <span>AI Assistant Recommendation</span>
-                                </div>
-                                <p class="text-xs text-indigo-950 leading-relaxed">
-                                    Data entry speed improved by <strong>62%</strong> after configuring pre-filled mapping rules for "Global Logistics Inc.".
-                                </p>
-                            </div>
-
-                            <div class="space-y-3">
-                                <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Storage & Database Links</h4>
-                                <div class="flex items-center justify-between p-3 border border-slate-100 rounded-lg text-xs">
-                                    <div class="flex items-center gap-2 text-slate-600">
-                                        <span class="material-symbols-rounded text-green-600">table_rows</span>
-                                        <span>Primary Datasheet</span>
-                                    </div>
-                                    <span class="text-[11px] text-[#5E35B1] font-semibold hover:underline cursor-pointer">Open Sheet</span>
-                                </div>
-                                <div class="flex items-center justify-between p-3 border border-slate-100 rounded-lg text-xs">
-                                    <div class="flex items-center gap-2 text-slate-600">
-                                        <span class="material-symbols-rounded text-amber-500">folder</span>
-                                        <span>Drive PDF Backup</span>
-                                    </div>
-                                    <span class="text-[11px] text-[#5E35B1] font-semibold hover:underline cursor-pointer">Open Drive</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- PAGE 2: SALES INVOICE (AI-Assisted Entry Interface) -->
-                <div id="tab-sales" class="tab-content hidden space-y-6">
-                    <!-- Workflow Top Actions -->
-                    <div class="flex items-center justify-between flex-wrap gap-4 bg-white p-4 rounded-[14px] border border-slate-200">
-                        <div class="flex items-center gap-3">
-                            <button class="bg-indigo-50 text-[#5E35B1] font-semibold text-xs px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center gap-2">
-                                <span class="material-symbols-rounded text-sm">upload_file</span>
-                                <span>Upload PDF</span>
-                            </button>
-                            <div class="text-xs text-slate-400">or drop single invoice here</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button class="bg-[#5E35B1] text-white text-xs px-4 py-2 rounded-lg hover:bg-[#673AB7] flex items-center gap-2 font-medium">
-                                <span class="material-symbols-rounded text-sm">auto_awesome</span>
-                                <span>Run AI Extraction</span>
-                            </button>
-                            <span class="h-6 w-px bg-slate-200"></span>
-                            <button class="bg-emerald-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-emerald-700 flex items-center gap-2 font-medium">
-                                <span class="material-symbols-rounded text-sm">done_all</span>
-                                <span>Approve & Sync to Sheet</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Split Screen UI -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        
-                        <!-- Left Screen Mock: Document Preview with AI Annotation overlays -->
-                        <div class="bg-slate-200 rounded-[14px] border border-slate-300 min-h-[500px] flex flex-col relative overflow-hidden bg-cover bg-center shadow-inner" style="background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.95)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1000');">
-                            <div class="p-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between z-10">
-                                <span class="text-xs font-semibold text-slate-700">Source: inv_0041_acmetech.pdf</span>
-                                <div class="flex items-center gap-1">
-                                    <button class="p-1 text-slate-500 hover:bg-slate-200 rounded"><span class="material-symbols-rounded text-sm">zoom_in</span></button>
-                                    <button class="p-1 text-slate-500 hover:bg-slate-200 rounded"><span class="material-symbols-rounded text-sm">zoom_out</span></button>
-                                </div>
-                            </div>
-                            <!-- Mock Document Visual overlays (mimicking Gemini extraction visual bounds) -->
-                            <div class="flex-1 p-8 relative flex flex-col justify-between">
-                                <!-- Top Area: Vendor Info & Inv Details Overlay -->
-                                <div class="flex justify-between items-start">
-                                    <div class="border-2 border-dashed border-[#5E35B1] bg-[#5E35B1]/10 p-2 rounded text-xs select-none relative">
-                                        <span class="absolute -top-4 left-0 bg-[#5E35B1] text-white text-[8px] px-1 rounded">Vendor Info</span>
-                                        <strong>ACME TECH SOLUTIONS</strong><br>
-                                        102 Enterprise Way, Suite 4
-                                    </div>
-                                    <div class="border-2 border-dashed border-[#5E35B1] bg-[#5E35B1]/10 p-2 rounded text-xs select-none relative text-right">
-                                        <span class="absolute -top-4 right-0 bg-[#5E35B1] text-white text-[8px] px-1 rounded">Invoice Details</span>
-                                        Invoice #: <strong class="text-[#5E35B1]">INV-2025-0041</strong><br>
-                                        Date: <strong>24-Jan-2025</strong>
-                                    </div>
-                                </div>
-
-                                <!-- Center Area: Items list visual simulation -->
-                                <div class="border-2 border-dashed border-[#5E35B1] bg-[#5E35B1]/10 p-4 rounded text-xs my-auto relative">
-                                    <span class="absolute -top-4 left-0 bg-[#5E35B1] text-white text-[8px] px-1 rounded">Line Items (Gemini Parsed)</span>
-                                    <table class="w-full text-left text-[11px]">
-                                        <thead>
-                                            <tr class="border-b border-dashed border-[#5E35B1]/30">
-                                                <th>Item</th>
-                                                <th>Qty</th>
-                                                <th>Price</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Cloud Compute Subscription (Tier 3)</td>
-                                                <td>1</td>
-                                                <td>$1,200.00</td>
-                                            </tr>
-                                            <tr>
-                                                <td>API Gateway Setup Fees</td>
-                                                <td>1</td>
-                                                <td>$450.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <!-- Bottom Area: Totals Annotation -->
-                                <div class="flex justify-end">
-                                    <div class="border-2 border-dashed border-emerald-600 bg-emerald-500/10 p-2 rounded text-xs select-none relative text-right w-40">
-                                        <span class="absolute -top-4 right-0 bg-emerald-600 text-white text-[8px] px-1 rounded">Total Amount</span>
-                                        Subtotal: $1,650.00<br>
-                                        Tax (18%): $297.00<br>
-                                        <strong>Total: $1,947.00</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Screen: Editable AI Extractions fields -->
-                        <div class="bg-white rounded-[14px] border border-slate-200 p-5 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                <h3 class="font-bold text-slate-800 text-sm">AI-Assisted Field Map</h3>
-                                <div class="flex items-center gap-1 bg-emerald-50 text-emerald-700 text-xs px-2 py-0.5 rounded-full font-semibold">
-                                    <span class="material-symbols-rounded text-sm">insights</span>
-                                    <span>High Confidence</span>
-                                </div>
-                            </div>
-
-                            <!-- Document Fields Forms -->
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Customer / Vendor Account</label>
-                                        <select class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                            <option>Acme Tech Solutions (C-00341)</option>
-                                            <option>Global Logistics Inc. (V-00892)</option>
-                                            <option>Nvidia Corp India (C-00109)</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Tax Code Alignment</label>
-                                        <select class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                            <option>GST 18% (Standard Services)</option>
-                                            <option>GST 5% (Logistics)</option>
-                                            <option>Exempt / Zero Rated</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Invoice / Reference No.</label>
-                                        <input type="text" value="INV-2025-0041" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Document Date</label>
-                                        <input type="date" value="2025-01-24" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Due Date</label>
-                                        <input type="date" value="2025-02-24" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                </div>
-
-                                <!-- Dynamically Parsed Line Items Table -->
-                                <div class="space-y-2 mt-4">
-                                    <div class="flex items-center justify-between">
-                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Line Items</h4>
-                                        <button type="button" class="text-xs text-[#5E35B1] font-bold hover:underline">+ Add Row</button>
-                                    </div>
-                                    <div class="border border-slate-200 rounded-lg overflow-hidden">
-                                        <table class="w-full text-left text-xs">
-                                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                                                <tr>
-                                                    <th class="p-2 w-1/2">Item Description</th>
-                                                    <th class="p-2">Qty</th>
-                                                    <th class="p-2">Unit Price</th>
-                                                    <th class="p-2 text-right">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-slate-100">
-                                                <tr>
-                                                    <td class="p-2"><input type="text" value="Cloud Compute Subscription (Tier 3)" class="w-full bg-transparent focus:outline-none focus:border-b focus:border-[#5E35B1]"></td>
-                                                    <td class="p-2"><input type="number" value="1" class="w-10 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2"><input type="text" value="1200.00" class="w-16 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2 text-right font-medium text-slate-700">$1,200.00</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="p-2"><input type="text" value="API Gateway Setup Fees" class="w-full bg-transparent focus:outline-none focus:border-b focus:border-[#5E35B1]"></td>
-                                                    <td class="p-2"><input type="number" value="1" class="w-10 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2"><input type="text" value="450.00" class="w-16 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2 text-right font-medium text-slate-700">$450.00</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- Totals Block -->
-                                <div class="pt-4 border-t border-slate-100 space-y-2 text-right">
-                                    <div class="text-xs text-slate-500">Subtotal: <span class="font-medium">$1,650.00</span></div>
-                                    <div class="text-xs text-slate-500 font-normal">Calculated Tax (18%): <span class="font-medium">$297.00</span></div>
-                                    <div class="text-sm font-bold text-slate-800">Grand Total: <span class="text-[#5E35B1]">$1,947.00</span></div>
-                                </div>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!-- PAGE 3: PURCHASE INVOICE -->
-                <div id="tab-purchase" class="tab-content hidden space-y-6">
-                    <!-- Workflow Top Actions -->
-                    <div class="flex items-center justify-between flex-wrap gap-4 bg-white p-4 rounded-[14px] border border-slate-200">
-                        <div class="flex items-center gap-3">
-                            <button class="bg-indigo-50 text-[#5E35B1] font-semibold text-xs px-3 py-2 rounded-lg hover:bg-indigo-100 flex items-center gap-2">
-                                <span class="material-symbols-rounded text-sm">upload_file</span>
-                                <span>Upload Supplier Bill</span>
-                            </button>
-                            <div class="text-xs text-slate-400">or drop Purchase PDF bills</div>
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <button class="bg-[#5E35B1] text-white text-xs px-4 py-2 rounded-lg hover:bg-[#673AB7] flex items-center gap-2 font-medium">
-                                <span class="material-symbols-rounded text-sm">auto_awesome</span>
-                                <span>Run AI Extraction</span>
-                            </button>
-                            <span class="h-6 w-px bg-slate-200"></span>
-                            <button class="bg-emerald-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-emerald-700 flex items-center gap-2 font-medium">
-                                <span class="material-symbols-rounded text-sm">done_all</span>
-                                <span>Approve & Sync to Sheet</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Split Screen UI -->
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        
-                        <!-- Left Screen Mock: Document Preview with AI Annotation overlays -->
-                        <div class="bg-slate-200 rounded-[14px] border border-slate-300 min-h-[500px] flex flex-col relative overflow-hidden bg-cover bg-center shadow-inner" style="background-image: linear-gradient(rgba(255,255,255,0.91), rgba(255,255,255,0.96)), url('https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1000');">
-                            <div class="p-4 bg-slate-100 border-b border-slate-200 flex items-center justify-between z-10">
-                                <span class="text-xs font-semibold text-slate-700">Source: supplier_bill_8849.pdf</span>
-                                <div class="flex items-center gap-1">
-                                    <button class="p-1 text-slate-500 hover:bg-slate-200 rounded"><span class="material-symbols-rounded text-sm">zoom_in</span></button>
-                                    <button class="p-1 text-slate-500 hover:bg-slate-200 rounded"><span class="material-symbols-rounded text-sm">zoom_out</span></button>
-                                </div>
-                            </div>
-                            <!-- Mock Document Visual overlays (mimicking Gemini extraction visual bounds) -->
-                            <div class="flex-1 p-8 relative flex flex-col justify-between">
-                                <!-- Top Area: Vendor Info & Inv Details Overlay -->
-                                <div class="flex justify-between items-start">
-                                    <div class="border-2 border-dashed border-yellow-500 bg-yellow-500/10 p-2 rounded text-xs select-none relative">
-                                        <span class="absolute -top-4 left-0 bg-yellow-600 text-white text-[8px] px-1 rounded">Supplier Name</span>
-                                        <strong>GLOBAL LOGISTICS INC.</strong><br>
-                                        88 Container Port, Gate 4
-                                    </div>
-                                    <div class="border-2 border-dashed border-yellow-500 bg-yellow-500/10 p-2 rounded text-xs select-none relative text-right">
-                                        <span class="absolute -top-4 right-0 bg-yellow-600 text-white text-[8px] px-1 rounded">Bill Info</span>
-                                        Bill #: <strong class="text-yellow-600">PO-8849-01</strong><br>
-                                        Date: <strong>22-Jan-2025</strong>
-                                    </div>
-                                </div>
-
-                                <!-- Center Area: Items list visual simulation -->
-                                <div class="border-2 border-dashed border-yellow-500 bg-yellow-500/10 p-4 rounded text-xs my-auto relative">
-                                    <span class="absolute -top-4 left-0 bg-yellow-600 text-white text-[8px] px-1 rounded">Purchase Lines (Low confidence match)</span>
-                                    <table class="w-full text-left text-[11px]">
-                                        <thead>
-                                            <tr class="border-b border-dashed border-yellow-500/30">
-                                                <th>Line Code</th>
-                                                <th>Description</th>
-                                                <th>Value</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>L-301</td>
-                                                <td>Standard Freight Handling Charges</td>
-                                                <td>$550.00</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <!-- Bottom Area: Totals Annotation -->
-                                <div class="flex justify-end">
-                                    <div class="border-2 border-dashed border-emerald-600 bg-emerald-500/10 p-2 rounded text-xs select-none relative text-right w-40">
-                                        <span class="absolute -top-4 right-0 bg-emerald-600 text-white text-[8px] px-1 rounded">Extracted Net</span>
-                                        Net Value: $550.00<br>
-                                        Fees: $0.00<br>
-                                        <strong>Total: $550.00</strong>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Screen: Editable AI Extractions fields -->
-                        <div class="bg-white rounded-[14px] border border-slate-200 p-5 shadow-sm space-y-4">
-                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
-                                <h3 class="font-bold text-slate-800 text-sm">Purchase Bill Fields Mapping</h3>
-                                <div class="flex items-center gap-1 bg-yellow-50 text-yellow-700 text-xs px-2 py-0.5 rounded-full font-semibold">
-                                    <span class="material-symbols-rounded text-sm">warning</span>
-                                    <span>Review Suggested</span>
-                                </div>
-                            </div>
-
-                            <!-- Document Fields Forms -->
-                            <form class="space-y-4">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Supplier Account Link</label>
-                                        <select class="w-full border border-yellow-300 bg-yellow-50/20 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none">
-                                            <option selected>Global Logistics Inc. (V-00892)</option>
-                                            <option>Acme Tech Solutions (C-00341)</option>
-                                            <option>Nvidia Corp India (C-00109)</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">GL Account Alignment</label>
-                                        <select class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                            <option>60040 - Freight & Carriage Cost</option>
-                                            <option>60010 - IT infrastructure & cloud</option>
-                                            <option>62000 - Professional Consultancies</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Invoice / Ref No.</label>
-                                        <input type="text" value="PO-8849-01" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">Document Date</label>
-                                        <input type="date" value="2025-01-22" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                    <div>
-                                        <label class="block text-xs font-semibold text-slate-500 mb-1">GL Posting Date</label>
-                                        <input type="date" value="2025-01-22" class="w-full border border-slate-200 rounded-lg p-2.5 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                    </div>
-                                </div>
-
-                                <!-- Dynamically Parsed Line Items Table -->
-                                <div class="space-y-2 mt-4">
-                                    <div class="flex items-center justify-between">
-                                        <h4 class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Line Items</h4>
-                                        <button type="button" class="text-xs text-[#5E35B1] font-bold hover:underline">+ Add Row</button>
-                                    </div>
-                                    <div class="border border-slate-200 rounded-lg overflow-hidden">
-                                        <table class="w-full text-left text-xs">
-                                            <thead class="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold">
-                                                <tr>
-                                                    <th class="p-2 w-1/2">Purchase Item / Service</th>
-                                                    <th class="p-2">Qty</th>
-                                                    <th class="p-2">Unit Price</th>
-                                                    <th class="p-2 text-right">Total</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-slate-100">
-                                                <tr>
-                                                    <td class="p-2"><input type="text" value="Standard Freight Handling Charges" class="w-full bg-transparent focus:outline-none focus:border-b focus:border-[#5E35B1]"></td>
-                                                    <td class="p-2"><input type="number" value="1" class="w-10 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2"><input type="text" value="550.00" class="w-16 bg-transparent focus:outline-none"></td>
-                                                    <td class="p-2 text-right font-medium text-slate-700">$550.00</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <!-- Totals Block -->
-                                <div class="pt-4 border-t border-slate-100 space-y-2 text-right">
-                                    <div class="text-xs text-slate-500">Subtotal: <span class="font-medium">$550.00</span></div>
-                                    <div class="text-xs text-slate-500 font-normal">Calculated Tax (0%): <span class="font-medium">$0.00</span></div>
-                                    <div class="text-sm font-bold text-slate-800">Grand Total: <span class="text-[#5E35B1]">$550.00</span></div>
-                                </div>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <!-- PAGE 4: MASTERS -->
-                <div id="tab-masters" class="tab-content hidden space-y-6">
-                    <!-- Filters and Actions Header -->
-                    <div class="flex items-center justify-between flex-wrap gap-4 bg-white p-4 rounded-[14px] border border-slate-200 shadow-sm">
-                        <div class="flex items-center gap-2">
-                            <input type="text" placeholder="Search customer, vendor, or GL codes..." class="border border-slate-200 rounded-lg p-2 text-xs w-64 focus:outline-none focus:ring-1 focus:ring-[#5E35B1]">
-                            <select class="border border-slate-200 rounded-lg p-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#5E35B1]">
-                                <option>All Categories</option>
-                                <option>Customers</option>
-                                <option>Vendors</option>
-                                <option>GL Accounts</option>
-                            </select>
-                        </div>
-                        <button class="bg-[#5E35B1] text-white text-xs px-4 py-2 rounded-lg hover:bg-[#673AB7] transition-all flex items-center gap-2">
-                            <span class="material-symbols-rounded text-sm">add</span>
-                            <span>Create Master Record</span>
-                        </button>
-                    </div>
-
-                    <!-- Master Database Table -->
-                    <div class="bg-white rounded-[14px] border border-slate-200 shadow-sm overflow-hidden">
-                        <table class="w-full text-left text-xs">
-                            <thead class="bg-slate-50 text-slate-600 uppercase font-semibold border-b border-slate-200">
-                                <tr>
-                                    <th class="px-5 py-3">Code</th>
-                                    <th class="px-5 py-3">Entity / Legal Name</th>
-                                    <th class="px-5 py-3">Category</th>
-                                    <th class="px-5 py-3">Primary Align Tax Code</th>
-                                    <th class="px-5 py-3">Google Sheet Linked ID</th>
-                                    <th class="px-5 py-3 text-right">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100">
-                                <tr>
-                                    <td class="px-5 py-4 font-mono font-semibold text-slate-700">C-00341</td>
-                                    <td class="px-5 py-4 font-semibold">Acme Tech Solutions Private Limited</td>
-                                    <td class="px-5 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full text-[10px] font-medium">Customer</span></td>
-                                    <td class="px-5 py-4">GST 18%</td>
-                                    <td class="px-5 py-4 text-slate-500">sheet-row-981</td>
-                                    <td class="px-5 py-4 text-right">
-                                        <button class="text-[#5E35B1] hover:underline font-semibold">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-5 py-4 font-mono font-semibold text-slate-700">V-00892</td>
-                                    <td class="px-5 py-4 font-semibold">Global Logistics Inc.</td>
-                                    <td class="px-5 py-4"><span class="bg-purple-50 text-[#5E35B1] px-2.5 py-1 rounded-full text-[10px] font-medium">Vendor</span></td>
-                                    <td class="px-5 py-4">GST 5%</td>
-                                    <td class="px-5 py-4 text-slate-500">sheet-row-1102</td>
-                                    <td class="px-5 py-4 text-right">
-                                        <button class="text-[#5E35B1] hover:underline font-semibold">Edit</button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="px-5 py-4 font-mono font-semibold text-slate-700">GL-60040</td>
-                                    <td class="px-5 py-4 font-semibold">Freight & Cartage Ledger</td>
-                                    <td class="px-5 py-4"><span class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-full text-[10px] font-medium">GL Account</span></td>
-                                    <td class="px-5 py-4">Zero Rated</td>
-                                    <td class="px-5 py-4 text-slate-500">sheet-row-45</td>
-                                    <td class="px-5 py-4 text-right">
-                                        <button class="text-[#5E35B1] hover:underline font-semibold">Edit</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-                <!-- PAGE 5: SETTINGS -->
-                <div id="tab-settings" class="tab-content hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        
-                        <!-- AI Settings Card -->
-                        <div class="bg-white p-6 rounded-[14px] border border-slate-200 shadow-sm space-y-4">
-                            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-                                <span class="material-symbols-rounded text-2xl text-[#5E35B1]">psychology</span>
-                                <h3 class="font-bold text-slate-800 text-sm">Gemini AI Model Calibration</h3>
-                            </div>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Model Version</label>
-                                    <select class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                        <option>Gemini 1.5 Flash (Fastest, Highly accurate for tables)</option>
-                                        <option>Gemini 1.5 Pro (In-depth analysis, structured reasoning)</option>
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Minimum Confidence Flag Threshold (90%)</label>
-                                    <input type="range" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-[#5E35B1]">
-                                    <div class="flex justify-between text-[10px] text-slate-400 mt-1">
-                                        <span>70% (Manual verification rare)</span>
-                                        <span>95% (High verification safe-mode)</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Integration Card -->
-                        <div class="bg-white p-6 rounded-[14px] border border-slate-200 shadow-sm space-y-4">
-                            <div class="flex items-center gap-3 border-b border-slate-100 pb-3">
-                                <span class="material-symbols-rounded text-2xl text-green-600">cloud_sync</span>
-                                <h3 class="font-bold text-slate-800 text-sm">Google Workspace Integration</h3>
-                            </div>
-
-                            <div class="space-y-4">
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Target Google Sheet Link URL</label>
-                                    <input type="text" value="https://docs.google.com/spreadsheets/d/1X9a0_demo_sheet_url_key" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Target Google Drive Folder ID</label>
-                                    <input type="text" value="1z_G8P-demo-drive-folder-hash" class="w-full border border-slate-200 rounded-lg p-2 text-xs focus:ring-1 focus:ring-[#5E35B1] focus:outline-none">
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                    
-                    <!-- Form Save Button Footer -->
-                    <div class="flex justify-end bg-white p-4 rounded-[14px] border border-slate-200">
-                        <button class="bg-[#5E35B1] text-white text-xs px-5 py-2.5 rounded-lg hover:bg-[#673AB7] transition-all font-semibold">Save Settings Configurations</button>
-                    </div>
-                </div>
-
-            </div>
-        </main>
+            <!-- Dynamic Viewport -->
+            <main class="app-content-viewport" id="contentViewport">
+                <!-- Routed templates load dynamically here -->
+            </main>
+            
+        </div>
     </div>
 
-    <!-- 4. NAVIGATION JAVASCRIPT -->
-    <script>
-        function switchTab(tabId) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(element => {
-                element.classList.add('hidden');
-            });
-
-            // Show active tab content
-            document.getElementById('tab-' + tabId).classList.remove('hidden');
-
-            // Deactivate all navigation items
-            document.querySelectorAll('.nav-item').forEach(element => {
-                element.classList.remove('active-nav');
-            });
-
-            // Activate current navigation item
-            document.getElementById('nav-' + tabId).classList.add('active-nav');
-
-            // Map and update page titles nicely
-            const pageTitles = {
-                'dashboard': 'Dashboard',
-                'sales': 'Sales Invoice AI Workspace',
-                'purchase': 'Purchase Invoice AI Workspace',
-                'masters': 'System Master Records',
-                'settings': 'Global Configuration & Integrations'
-            };
-            document.getElementById('page-title').innerText = pageTitles[tabId];
-        }
-    </script>
+    <!-- Application Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/router.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
