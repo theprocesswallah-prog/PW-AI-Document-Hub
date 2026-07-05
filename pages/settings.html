@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Processwallah AI Document Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .settings-card {
+            background-color: var(--card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+        }
+        @media(max-width: 768px) {
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <aside class="app-sidebar" id="appSidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <span class="material-symbols-rounded">neurology</span>
+                </div>
+                <div class="brand-info">
+                    <h1 class="brand-name">Processwallah</h1>
+                    <span class="brand-tag">AI Document Hub</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="../index.html" class="nav-link">
+                    <span class="material-symbols-rounded">dashboard</span>
+                    <span class="nav-label">Dashboard</span>
+                </a>
+                
+                <div class="nav-group-label">Sales Department</div>
+                <a href="sales-upload.html" class="nav-link">
+                    <span class="material-symbols-rounded">upload_file</span>
+                    <span class="nav-label">AI Upload</span>
+                </a>
+                <a href="sales-register.html" class="nav-link">
+                    <span class="material-symbols-rounded">analytics</span>
+                    <span class="nav-label">Sales Register</span>
+                </a>
+
+                <div class="nav-group-label">Purchase Department</div>
+                <a href="purchase-upload.html" class="nav-link">
+                    <span class="material-symbols-rounded">receipt_long</span>
+                    <span class="nav-label">Bill Upload</span>
+                </a>
+                <a href="purchase-register.html" class="nav-link">
+                    <span class="material-symbols-rounded">payments</span>
+                    <span class="nav-label">Purchase Register</span>
+                </a>
+
+                <div class="nav-group-label">System</div>
+                <a href="masters.html" class="nav-link">
+                    <span class="material-symbols-rounded">database</span>
+                    <span class="nav-label">Masters</span>
+                </a>
+                <a href="settings.html" class="nav-link active">
+                    <span class="material-symbols-rounded">settings</span>
+                    <span class="nav-label">Settings</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-indicator online"></span>
+                    <span class="status-text">Gemini Engine Ready</span>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-layout">
+            
+            <header class="app-header">
+                <div class="header-left">
+                    <button class="menu-toggle-btn" id="menuToggle">
+                        <span class="material-symbols-rounded">menu</span>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-parent">System</span>
+                        <span class="breadcrumb-separator">/</span>
+                        <span class="breadcrumb-current">Settings & Connectors</span>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button class="notification-bell" aria-label="Notifications">
+                        <span class="material-symbols-rounded">notifications</span>
+                    </button>
+                    <div class="user-profile">
+                        <div class="profile-details">
+                            <span class="profile-name">Finance Operations</span>
+                            <span class="profile-role">Department Admin</span>
+                        </div>
+                        <div class="profile-avatar">FO</div>
+                    </div>
+                </div>
+            </header>
+
+            <main class="app-content-viewport">
+                <div class="settings-grid">
+                    <!-- Gemini Engine Config -->
+                    <div class="settings-card">
+                        <h3 style="font-size:15px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                            <span class="material-symbols-rounded" style="color:var(--primary);">psychology</span>
+                            AI Calibration
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">Active Gemini Version Link</label>
+                            <select class="form-input" style="background-color: transparent">
+                                <option>Gemini 1.5 Flash (Optimized OCR Speed)</option>
+                                <option>Gemini 1.5 Pro (Optimized Accuracy)</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="form-label">Auto-Approve Threshold Confidence (%)</label>
+                            <input type="range" min="50" max="100" value="90" style="accent-color: var(--primary); cursor: pointer;">
+                        </div>
+                    </div>
+
+                    <!-- Target Sheet Directory Config -->
+                    <div class="settings-card">
+                        <h3 style="font-size:15px; font-weight:600; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                            <span class="material-symbols-rounded" style="color: #10B981">table_rows</span>
+                            Target Sheets Mapping
+                        </h3>
+                        <div class="form-group">
+                            <label class="form-label">Google Sheets Destination Link</label>
+                            <input type="text" class="form-input" value="https://docs.google.com/spreadsheets/d/1BxiM_ActiveSheetsDatabase_Key">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Google Drive Invoice Directory ID</label>
+                            <input type="text" class="form-input" value="drive_folder_id_x82173_backup">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display:flex; justify-content: flex-end; margin-top:24px;">
+                    <button class="btn btn-primary">Save Engine Configurations</button>
+                </div>
+            </main>
+
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html>
