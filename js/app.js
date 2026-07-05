@@ -1,53 +1,51 @@
 /**
- * Application Core Bootstrapper
+ * Core Application Shell and Layout Handlers
  */
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize UI Controls
-    window.AppUI.init();
+    // Page Loader animation on load
+    const loader = document.createElement('div');
+    loader.className = 'page-loader active';
+    const bar = document.createElement('div');
+    bar.className = 'page-loader-bar';
+    loader.appendChild(bar);
+    document.body.appendChild(loader);
 
-    // 2. Register Routes and Map Views
-    window.AppRouter.register('#/dashboard', () => {
-        window.AppUI.updateNavigationHighlight('#/dashboard');
-        window.AppUI.setBreadcrumb('Workspace', 'Dashboard');
-        window.AppUI.renderPageShellPlaceholder('Dashboard Workspace');
-    });
+    setTimeout(() => {
+        loader.classList.remove('active');
+        setTimeout(() => loader.remove(), 300);
+    }, 400);
 
-    window.AppRouter.register('#/sales-upload', () => {
-        window.AppUI.updateNavigationHighlight('#/sales-upload');
-        window.AppUI.setBreadcrumb('Sales Department', 'AI Document Upload');
-        window.AppUI.renderPageShellPlaceholder('Sales Document Upload Pane');
-    });
+    // Sidebar Collapse Logic
+    const sidebar = document.getElementById('appSidebar');
+    const menuToggle = document.getElementById('menuToggle');
 
-    window.AppRouter.register('#/sales-register', () => {
-        window.AppUI.updateNavigationHighlight('#/sales-register');
-        window.AppUI.setBreadcrumb('Sales Department', 'Sales Register');
-        window.AppUI.renderPageShellPlaceholder('Sales Extract Register');
-    });
+    // Retrieve state from localStorage to maintain user preference across page navigation
+    const isCollapsed = localStorage.getItem('sidebar-collapsed') === 'true';
+    if (isCollapsed && sidebar) {
+        sidebar.classList.add('collapsed');
+    }
 
-    window.AppRouter.register('#/purchase-upload', () => {
-        window.AppUI.updateNavigationHighlight('#/purchase-upload');
-        window.AppUI.setBreadcrumb('Purchase Department', 'AI Bill Upload');
-        window.AppUI.renderPageShellPlaceholder('Purchase Bill Upload Pane');
-    });
+    if (menuToggle && sidebar) {
+        menuToggle.addEventListener('click', () => {
+            if (window.innerWidth > 1024) {
+                sidebar.classList.toggle('collapsed');
+                localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+            } else {
+                sidebar.classList.toggle('open');
+            }
+        });
+    }
 
-    window.AppRouter.register('#/purchase-register', () => {
-        window.AppUI.updateNavigationHighlight('#/purchase-register');
-        window.AppUI.setBreadcrumb('Purchase Department', 'Purchase Register');
-        window.AppUI.renderPageShellPlaceholder('Purchase Extract Register');
-    });
-
-    window.AppRouter.register('#/masters', () => {
-        window.AppUI.updateNavigationHighlight('#/masters');
-        window.AppUI.setBreadcrumb('System', 'Masters Configuration');
-        window.AppUI.renderPageShellPlaceholder('Tax & Ledger Account Masters');
-    });
-
-    window.AppRouter.register('#/settings', () => {
-        window.AppUI.updateNavigationHighlight('#/settings');
-        window.AppUI.setBreadcrumb('System', 'Global Settings');
-        window.AppUI.renderPageShellPlaceholder('Integrations & Engine Settings');
-    });
-
-    // 3. Trigger Initial Boot
-    window.AppRouter.handleRouting();
+    // Dynamic Search Filter Logic for Tables
+    const searchInput = document.getElementById('tableSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('.enterprise-table tbody tr');
+            rows.forEach(row => {
+                const text = row.innerText.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        });
+    }
 });
