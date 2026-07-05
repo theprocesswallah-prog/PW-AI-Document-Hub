@@ -3,59 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales AI Upload - Processwallah AI Document Hub</title>
+    <title>Sales AI Upload - Processwallah OCR</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/sales.css">
     <link rel="stylesheet" href="../css/responsive.css">
-    <style>
-        .split-layout {
-            display: grid;
-            grid-template-columns: 1fr 1.1fr;
-            gap: 24px;
-            height: calc(100vh - 112px);
-            overflow: hidden;
-        }
-        .viewer-pane {
-            background-color: #E2E8F0;
-            border-radius: var(--border-radius);
-            border: 1px dashed var(--text-light);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 40px;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color var(--transition-speed);
-        }
-        .viewer-pane:hover {
-            background-color: #CBD5E1;
-        }
-        .form-pane {
-            background-color: var(--card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-        @media(max-width: 1024px) {
-            .split-layout {
-                grid-template-columns: 1fr;
-                height: auto;
-                overflow: visible;
-            }
-        }
-    </style>
 </head>
 <body>
 
+    <!-- Top Loading Indicator -->
+    <div class="page-loader" id="pageLoader">
+        <div class="page-loader-bar"></div>
+    </div>
+
     <div class="app-container">
         
+        <!-- Sidebar Navigation -->
         <aside class="app-sidebar" id="appSidebar">
             <div class="sidebar-header">
                 <div class="brand-logo">
@@ -63,7 +28,7 @@
                 </div>
                 <div class="brand-info">
                     <h1 class="brand-name">Processwallah</h1>
-                    <span class="brand-tag">AI Document Hub</span>
+                    <span class="brand-tag">OCR ENGINE V1.0</span>
                 </div>
             </div>
 
@@ -112,17 +77,19 @@
             </div>
         </aside>
 
+        <!-- Main Workspace Frame -->
         <div class="main-layout">
             
+            <!-- Structural Top Header -->
             <header class="app-header">
                 <div class="header-left">
-                    <button class="menu-toggle-btn" id="menuToggle">
+                    <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Navigation">
                         <span class="material-symbols-rounded">menu</span>
                     </button>
                     <div class="breadcrumb">
                         <span class="breadcrumb-parent">Sales Department</span>
                         <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-current">AI Document Upload</span>
+                        <span class="breadcrumb-current">AI Document Inbound</span>
                     </div>
                 </div>
 
@@ -130,6 +97,7 @@
                     <button class="notification-bell" aria-label="Notifications">
                         <span class="material-symbols-rounded">notifications</span>
                     </button>
+                    
                     <div class="user-profile">
                         <div class="profile-details">
                             <span class="profile-name">Finance Operations</span>
@@ -140,86 +108,262 @@
                 </div>
             </header>
 
-            <main class="app-content-viewport">
-                <div class="split-layout">
-                    <!-- Drop Zone / Document preview Mock -->
-                    <div class="viewer-pane">
-                        <span class="material-symbols-rounded" style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">upload_file</span>
-                        <h3 style="font-size: 16px; margin-bottom: 8px; color: var(--text-primary)">Drag and Drop Sales Invoice PDF</h3>
-                        <p style="font-size: 12px; color: var(--text-secondary); max-width: 280px; line-height: 1.5;">Supported file types: PDF, PNG, JPEG. AI model processes instantly upon dropped load.</p>
+            <!-- Sales Inbound Content Area -->
+            <main class="app-content-viewport sales-split-layout">
+                
+                <!-- Section A: Left Ingestion Panel -->
+                <section class="ingest-panel">
+                    <div class="panel-card drag-drop-card" id="dropZone">
+                        <span class="material-symbols-rounded upload-icon">cloud_upload</span>
+                        <h3>Drag & drop Sales Invoice</h3>
+                        <p class="upload-sub">Supports PDF, PNG, JPG up to 15MB</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse Files</button>
+                        <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg" style="display: none;">
                     </div>
 
-                    <!-- AI Field Map Form -->
-                    <div class="form-pane">
-                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-                            <h3 style="font-size:15px; font-weight:600;">AI Extracted Fields Map</h3>
-                            <span class="badge synced">Model Aligned (98%)</span>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Customer Legal Entity Name</label>
-                            <input type="text" class="form-input" value="Tesla Motors India Pvt Ltd">
-                        </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="form-group">
-                                <label class="form-label">Invoice Reference #</label>
-                                <input type="text" class="form-input" value="INV-2025-0988">
+                    <div class="panel-card upload-status-card">
+                        <h4 class="card-subtitle">Ingress Pipeline Status</h4>
+                        <div class="upload-progress-wrapper" style="display: none;" id="progressContainer">
+                            <div class="progress-info">
+                                <span id="uploadFileName">inv_acme_4812.pdf</span>
+                                <span id="uploadPercentage">74%</span>
                             </div>
-                            <div class="form-group">
-                                <label class="form-label">Invoice Date</label>
-                                <input type="date" class="form-input" value="2025-01-24">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" id="progressBar"></div>
                             </div>
                         </div>
-
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
-                            <div class="form-group">
-                                <label class="form-label">Tax Scheme Classification</label>
-                                <input type="text" class="form-input" value="GST 18% Standard">
-                            </div>
-                            <div class="form-group">
-                                <label class="form-label">Total Amount Calculated</label>
-                                <input type="text" class="form-input" value="$14,500.00">
-                            </div>
-                        </div>
-
-                        <!-- Mini Line Item Table -->
-                        <div>
-                            <div class="form-label" style="margin-bottom:8px">Extracted Line Items</div>
-                            <table class="enterprise-table" style="border: 1px solid var(--border-color); border-radius: var(--border-radius)">
-                                <thead style="background-color: #F8FAFC">
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Qty</th>
-                                        <th>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Software Setup Consulting</td>
-                                        <td>1</td>
-                                        <td>$12,288.14</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Cloud Computing Unit Charge</td>
-                                        <td>10</td>
-                                        <td>$2,211.86</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div style="display: flex; gap: 12px; margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border-color);">
-                            <button class="btn btn-primary" style="flex: 1; justify-content: center;">Approve & Sync to Sheet</button>
-                            <button class="btn btn-secondary">Flag Low Accuracy</button>
+                        <div class="pipeline-indicators" id="pipelineStatusDefault">
+                            <span class="status-indicator online"></span>
+                            <span class="status-msg-lbl">Ready to receive stream payload...</span>
                         </div>
                     </div>
-                </div>
+                </section>
+
+                <!-- Section B: Center Document Viewer -->
+                <section class="viewer-panel">
+                    <div class="panel-card viewer-card">
+                        <div class="viewer-toolbar">
+                            <div class="toolbar-left">
+                                <button class="btn btn-secondary toolbar-btn" id="btnPrevPage" disabled>
+                                    <span class="material-symbols-rounded">chevron_left</span>
+                                </button>
+                                <span class="page-counter">Page <span id="currentPage">1</span> of <span id="totalPages">1</span></span>
+                                <button class="btn btn-secondary toolbar-btn" id="btnNextPage" disabled>
+                                    <span class="material-symbols-rounded">chevron_right</span>
+                                </button>
+                            </div>
+                            <div class="toolbar-right">
+                                <button class="btn btn-secondary toolbar-btn" id="btnZoomIn"><span class="material-symbols-rounded">zoom_in</span></button>
+                                <button class="btn btn-secondary toolbar-btn" id="btnZoomOut"><span class="material-symbols-rounded">zoom_out</span></button>
+                                <button class="btn btn-secondary toolbar-btn" id="btnRotate"><span class="material-symbols-rounded">rotate_right</span></button>
+                            </div>
+                        </div>
+
+                        <!-- Render Frame Sandbox -->
+                        <div class="document-canvas-container" id="docCanvas">
+                            <div class="ocr-bounding-overlay" style="top: 15%; left: 8%; width: 32%; height: 8%;" data-field="vendor_name">
+                                <span class="overlay-tag">Customer Name</span>
+                            </div>
+                            <div class="ocr-bounding-overlay" style="top: 15%; right: 8%; width: 22%; height: 5%;" data-field="invoice_no">
+                                <span class="overlay-tag">Invoice No</span>
+                            </div>
+                            <div class="ocr-bounding-overlay" style="top: 38%; left: 8%; width: 84%; height: 25%;" data-field="items_table">
+                                <span class="overlay-tag">Items Area</span>
+                            </div>
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&q=80&w=1000" alt="Ingested Invoice Document Preview" class="canvas-image" id="canvasImage">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section C: Right AI Validation Form Panel -->
+                <section class="form-panel">
+                    <div class="panel-card form-card">
+                        <div class="form-panel-header">
+                            <h3 class="form-panel-title">Extracted Transaction variables</h3>
+                            <span class="badge synced" id="confidenceBadge">98% Accuracy</span>
+                        </div>
+
+                        <form class="ocr-edit-form" onsubmit="return false;">
+                            <div class="form-group highlight-confidence">
+                                <label class="form-label">Customer Master Account</label>
+                                <select class="form-input" id="fieldCustomer" style="background: none;">
+                                    <option value="CST-00341">Acme Industrial Supplies (CST-00341)</option>
+                                    <option value="CST-00109">Nvidia APAC Division (CST-00109)</option>
+                                    <option value="CST-00892">Tesla Motors India Pvt Ltd (CST-00892)</option>
+                                </select>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Number</label>
+                                    <input type="text" class="form-input" id="fieldInvoiceNo" value="INV-2025-0814">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Invoice Date</label>
+                                    <input type="date" class="form-input" id="fieldInvoiceDate" value="2025-01-24">
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                <div class="form-group">
+                                    <label class="form-label">Tax Scheme Classification</label>
+                                    <select class="form-input" id="fieldTaxScheme" style="background: none;">
+                                        <option value="GST18">GST 18% Standard</option>
+                                        <option value="GST5">GST 5% Carriage</option>
+                                        <option value="EXEMPT">Exempt / Zero Rated</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Transaction Currency</label>
+                                    <input type="text" class="form-input" id="fieldCurrency" value="INR">
+                                </div>
+                            </div>
+
+                            <!-- Structural Line Items Section -->
+                            <div class="line-items-form-section">
+                                <div class="section-label-header">
+                                    <span class="form-label" style="margin-bottom:0">Tabular Line Items</span>
+                                    <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 11px;" id="btnAddRow">+ Add Row</button>
+                                </div>
+
+                                <div class="line-items-table-wrapper">
+                                    <table class="items-editor-table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 45%;">Description</th>
+                                                <th>Qty</th>
+                                                <th>Rate</th>
+                                                <th style="text-align: right;">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="lineItemsContainer">
+                                            <tr>
+                                                <td><input type="text" class="table-cell-input" value="Mild Steel Plate 12mm Grade B"></td>
+                                                <td><input type="number" class="table-cell-input" value="10" style="width: 45px;"></td>
+                                                <td><input type="number" class="table-cell-input" value="1055.08" style="width: 70px;"></td>
+                                                <td class="cell-total-value">$10,550.80</td>
+                                            </tr>
+                                            <tr>
+                                                <td><input type="text" class="table-cell-input" value="Logistics Carriage Overlay"></td>
+                                                <td><input type="number" class="table-cell-input" value="1" style="width: 45px;"></td>
+                                                <td><input type="number" class="table-cell-input" value="1899.20" style="width: 70px;"></td>
+                                                <td class="cell-total-value">$1,899.20</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Computations Summary -->
+                            <div class="computations-summary-wrapper">
+                                <div class="comp-row">
+                                    <span>Taxable Subtotal:</span>
+                                    <span id="subtotalVal">$12,450.00</span>
+                                </div>
+                                <div class="comp-row">
+                                    <span>Calculated Tax (GST 18%):</span>
+                                    <span id="taxVal">$2,241.00</span>
+                                </div>
+                                <div class="comp-row grand-total-row">
+                                    <span>Grand Total Balance:</span>
+                                    <span id="grandTotalVal">$14,691.00</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Bottom Action Sheet Bar -->
+                    <div class="panel-card action-bar-card">
+                        <button class="btn btn-secondary action-btn-alt" id="btnReprocess">Reprocess OCR</button>
+                        <div class="action-btn-group">
+                            <button class="btn btn-secondary" id="btnSaveDraft">Save Draft</button>
+                            <button class="btn btn-primary" id="btnApproveSync">Approve & Sync</button>
+                        </div>
+                    </div>
+                </section>
+
             </main>
-
         </div>
     </div>
 
+    <!-- Application Initialization Scripts -->
     <script src="../js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Drag-and-Drop visual overlay logic
+            const dropZone = document.getElementById('dropZone');
+            const progressContainer = document.getElementById('progressContainer');
+            const pipelineDefault = document.getElementById('pipelineStatusDefault');
+            const progressBar = document.getElementById('progressBar');
+            const fileInput = document.getElementById('fileInput');
+
+            if (dropZone) {
+                dropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    dropZone.style.borderColor = 'var(--primary)';
+                    dropZone.style.backgroundColor = '#EEF2F6';
+                });
+
+                dropZone.addEventListener('dragleave', () => {
+                    dropZone.style.borderColor = 'var(--text-light)';
+                    dropZone.style.backgroundColor = 'transparent';
+                });
+
+                dropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    dropZone.style.borderColor = 'var(--border-color)';
+                    dropZone.style.backgroundColor = 'transparent';
+                    simulateUpload();
+                });
+            }
+
+            if (fileInput) {
+                fileInput.addEventListener('change', () => {
+                    simulateUpload();
+                });
+            }
+
+            function simulateUpload() {
+                pipelineDefault.style.display = 'none';
+                progressContainer.style.display = 'block';
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    progressBar.style.width = progress + '%';
+                    document.getElementById('uploadPercentage').innerText = progress + '%';
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        Toast.show('Document bytes verified and parsed successfully', 'success');
+                    }
+                }, 150);
+            }
+
+            // Annotation overlay bounding box tracking
+            const overlays = document.querySelectorAll('.ocr-bounding-overlay');
+            overlays.forEach(overlay => {
+                overlay.addEventListener('click', () => {
+                    const targetField = overlay.getAttribute('data-field');
+                    Toast.show(`Field associated: ${targetField}`, 'info');
+                    
+                    // Highlights respective overlay
+                    overlays.forEach(item => item.style.borderColor = '#10B981');
+                    overlay.style.borderColor = 'var(--primary)';
+                });
+            });
+
+            // Action Triggers binding
+            document.getElementById('btnApproveSync').addEventListener('click', () => {
+                Toast.show('Acquiring write lock. Sync transaction approved.', 'success');
+            });
+
+            document.getElementById('btnSaveDraft').addEventListener('click', () => {
+                Toast.show('Staging record written to DOCUMENT_MASTER.', 'info');
+            });
+
+            document.getElementById('btnReprocess').addEventListener('click', () => {
+                Toast.show('Retrying Gemini Vision OCR call with prompt v1.4...', 'warning');
+            });
+        });
+    </script>
 </body>
 </html>
