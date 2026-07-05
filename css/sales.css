@@ -1,1 +1,338 @@
+/* --- Sales OCR Workspace Styling Layout --- */
 
+.sales-split-layout {
+    display: grid;
+    grid-template-columns: 280px 1.2fr 1fr;
+    gap: 20px;
+    height: calc(100vh - 112px);
+    overflow: hidden;
+}
+
+.panel-card {
+    background-color: var(--card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 16px;
+}
+
+/* Section A: Ingest Panel styling */
+.ingest-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.drag-drop-card {
+    flex: 1;
+    border: 2px dashed var(--text-light);
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--transition-speed), background-color var(--transition-speed);
+}
+
+.drag-drop-card:hover {
+    border-color: var(--primary);
+    background-color: #F8FAFC;
+}
+
+.upload-icon {
+    font-size: 42px;
+    color: var(--primary);
+    margin-bottom: 12px;
+}
+
+.upload-sub {
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin: 6px 0 16px 0;
+}
+
+.upload-status-card {
+    height: auto;
+}
+
+.card-subtitle {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+
+.progress-bar-bg {
+    background-color: #E2E8F0;
+    height: 6px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background-color: var(--primary);
+    height: 100%;
+    width: 0;
+    transition: width 0.1s ease;
+}
+
+.pipeline-indicators {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+/* Section B: Document Viewer */
+.viewer-panel {
+    display: flex;
+    flex-direction: column;
+}
+
+.viewer-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 0;
+}
+
+.viewer-toolbar {
+    height: 48px;
+    border-bottom: 1px solid var(--border-color);
+    background-color: #F8FAFC;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-btn {
+    padding: 6px !important;
+}
+
+.toolbar-btn .material-symbols-rounded {
+    font-size: 18px;
+}
+
+.page-counter {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.document-canvas-container {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background-color: #64748B;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px 0;
+}
+
+.canvas-image {
+    max-width: 90%;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.ocr-bounding-overlay {
+    position: absolute;
+    border: 2px solid #10B981;
+    background-color: rgba(16, 185, 129, 0.15);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: border-color 0.15s, background-color 0.15s;
+}
+
+.ocr-bounding-overlay:hover {
+    border-color: var(--primary);
+    background-color: rgba(94, 53, 177, 0.15);
+}
+
+.overlay-tag {
+    position: absolute;
+    top: -18px;
+    left: -2px;
+    background-color: var(--primary);
+    color: #FFFFFF;
+    font-size: 9px;
+    font-weight: 600;
+    padding: 1px 4px;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+/* Section C: Right AI Validation Form Panel */
+.form-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.form-card {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.form-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.form-panel-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.ocr-edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Editable Form Specifics */
+.highlight-confidence {
+    border-left: 3px solid #F59E0B;
+    padding-left: 8px;
+}
+
+.line-items-form-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 12px;
+    margin-top: 12px;
+}
+
+.section-label-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.line-items-table-wrapper {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.items-editor-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.items-editor-table th {
+    background-color: #F8FAFC;
+    padding: 8px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.items-editor-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.table-cell-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 11px;
+    color: var(--text-primary);
+    outline: none;
+    border-bottom: 1px dashed transparent;
+}
+
+.table-cell-input:focus {
+    border-bottom-color: var(--primary);
+}
+
+.cell-total-value {
+    text-align: right;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.computations-summary-wrapper {
+    background-color: #F8FAFC;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.comp-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.comp-row span:last-child {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.grand-total-row {
+    border-top: 1px solid var(--border-color);
+    padding-top: 6px;
+    margin-top: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.grand-total-row span:last-child {
+    color: var(--primary);
+}
+
+.action-bar-card {
+    height: auto;
+    margin-bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.action-btn-group {
+    display: flex;
+    gap: 8px;
+}
+
+@media(max-width: 1200px) {
+    .sales-split-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: visible;
+    }
+}
