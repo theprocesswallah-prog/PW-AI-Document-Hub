@@ -1,3 +1,5 @@
+/* --- Enterprise SaaS Fluid Responsiveness --- */
+
 @media (max-width: 1024px) {
     .app-sidebar {
         position: fixed;
@@ -13,11 +15,12 @@
         width: 260px;
     }
 
+    /* Keep collapsed state parameters locked out on smaller viewports */
     .app-sidebar.collapsed {
         left: 0;
         width: 78px;
     }
-    
+
     .app-sidebar.collapsed .brand-info,
     .app-sidebar.collapsed .nav-label,
     .app-sidebar.collapsed .nav-group-label,
@@ -41,5 +44,21 @@
 
     .app-content-viewport {
         padding: 16px;
+    }
+
+    /* Grid layout adjustments */
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .table-header .search-box {
+        width: 100% !important;
     }
 }
