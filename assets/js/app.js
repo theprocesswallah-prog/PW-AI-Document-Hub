@@ -1,7 +1,7 @@
 /**
- * Processwallah OCR Engine V1.0 - Core Application Bootstrap Controller
- * Version 1.0.0
- * Initializes dynamic state variables, audits connectivity latency, and manages user sessions.
+ * Processwallah OCR Engine V1.0 - Central Bootstrapper
+ * Version 1.0.1
+ * Manages active user sessions, measures connection performance, and handles UI updates.
  */
 
 const AppManager = {
@@ -34,7 +34,7 @@ const AppManager = {
      */
     async initializeActiveSession() {
         if (!window.supabaseClient) {
-            console.warn("Client Offline: Connecting database configurations via Settings dashboard.");
+            console.warn("Client Connection Offline. Configure credentials in the Settings panel.");
             return;
         }
 
@@ -55,9 +55,47 @@ const AppManager = {
                         headerAvatar.innerText = nameString.charAt(0).toUpperCase();
                     }
                 }
+            } else {
+                // If the user navigates directly without an active session, redirect to the login page
+                if (window.location.hash !== '#/login') {
+                    window.location.hash = '#/login';
+                }
             }
         } catch (err) {
             console.error("Session profile alignment interrupted:", err.message);
+        }
+    },
+
+    /**
+     * Terminate active user sessions securely
+     */
+    async logoutSessionAction() {
+        const loader = document.getElementById('pageLoader');
+        if (loader) loader.classList.add('active');
+
+        try {
+            if (window.AuthService) {
+                await window.AuthService.logout();
+                if (window.NotificationService) {
+                    window.NotificationService.showSuccess("User session terminated.");
+                }
+                
+                // Clear header values on logout
+                document.getElementById('globalProfileHeaderName').innerText = "Guest Identity";
+                document.getElementById('globalProfileHeaderRole').innerText = "Offline";
+                document.getElementById('globalProfileHeaderAvatar').innerText = "G";
+
+                setTimeout(() => {
+                    window.location.hash = '#/login';
+                }, 500);
+            }
+        } catch (err) {
+            console.error("Sign out failed:", err.message);
+            if (window.NotificationService) {
+                window.NotificationService.showError("Failed to log out securely.");
+            }
+        } finally {
+            if (loader) loader.classList.remove('active');
         }
     },
 
