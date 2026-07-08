@@ -3,17 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Masters - Processwallah AI Document Hub</title>
+    <title>Master Records Manager - Processwallah OCR</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        /* Shared split-screen adjustment overrides for master panel execution */
+        .masters-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+        .master-tabs-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background-color: var(--sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        .master-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            padding: 10px 12px;
+            background: none;
+            border: none;
+            outline: none;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            transition: all var(--transition-speed);
+        }
+        .master-tab-btn:hover {
+            background-color: #F1F5F9;
+            color: var(--primary);
+        }
+        .master-tab-btn.active {
+            background-color: #EEF2F6;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .masters-content-pane {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        /* Dynamic modal layout styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-container {
+            background-color: var(--card);
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 600px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            animation: modalFadeIn 0.25s ease-out;
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        .modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background-color: #F8FAFC;
+        }
+        @keyframes modalFadeIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @media(max-width: 768px) {
+            .masters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
 
+    <!-- Top Loading Indicator -->
+    <div class="page-loader" id="pageLoader">
+        <div class="page-loader-bar"></div>
+    </div>
+
     <div class="app-container">
         
+        <!-- Sidebar Navigation -->
         <aside class="app-sidebar" id="appSidebar">
             <div class="sidebar-header">
                 <div class="brand-logo">
@@ -21,7 +134,7 @@
                 </div>
                 <div class="brand-info">
                     <h1 class="brand-name">Processwallah</h1>
-                    <span class="brand-tag">AI Document Hub</span>
+                    <span class="brand-tag">OCR ENGINE V1.0</span>
                 </div>
             </div>
 
@@ -32,7 +145,7 @@
                 </a>
                 
                 <div class="nav-group-label">Sales Department</div>
-                <a href="sales-upload.html" class="nav-link">
+                <a href="universal-workspace.html?type=sales-invoice" class="nav-link">
                     <span class="material-symbols-rounded">upload_file</span>
                     <span class="nav-label">AI Upload</span>
                 </a>
@@ -42,7 +155,7 @@
                 </a>
 
                 <div class="nav-group-label">Purchase Department</div>
-                <a href="purchase-upload.html" class="nav-link">
+                <a href="universal-workspace.html?type=purchase-invoice" class="nav-link">
                     <span class="material-symbols-rounded">receipt_long</span>
                     <span class="nav-label">Bill Upload</span>
                 </a>
@@ -70,6 +183,7 @@
             </div>
         </aside>
 
+        <!-- Main Layout Area -->
         <div class="main-layout">
             
             <header class="app-header">
@@ -80,7 +194,7 @@
                     <div class="breadcrumb">
                         <span class="breadcrumb-parent">System</span>
                         <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-current">Masters Configuration</span>
+                        <span class="breadcrumb-current">Masters Sync Engine</span>
                     </div>
                 </div>
 
@@ -99,53 +213,93 @@
             </header>
 
             <main class="app-content-viewport">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">Tax and Ledger Accounts Masters Mapping</h2>
-                        <button class="btn btn-primary">Add Master Record</button>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="enterprise-table">
-                            <thead>
-                                <tr>
-                                    <th>Mapped Code</th>
-                                    <th>Legal Entity Account</th>
-                                    <th>Category Type</th>
-                                    <th>Primary Tax Scheme Alignment</th>
-                                    <th>Database Sheet Link</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="font-weight: 600;">C-00341</td>
-                                    <td>Acme Industrial Supplies</td>
-                                    <td><span class="badge synced" style="border-radius: 4px;">Customer</span></td>
-                                    <td>GST 18% Standard</td>
-                                    <td>Row mapping id_082</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 600;">V-00892</td>
-                                    <td>Nexus Logistics Ltd</td>
-                                    <td><span class="badge pending" style="border-radius: 4px;">Vendor</span></td>
-                                    <td>GST 5% Carriage</td>
-                                    <td>Row mapping id_083</td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 600;">GL-60040</td>
-                                    <td>Carriage & Freight Ledger</td>
-                                    <td><span class="badge synced" style="background-color: #EFF6FF; color: #1E40AF; border-radius: 4px;">GL Account</span></td>
-                                    <td>Exempt Scheme</td>
-                                    <td>Row mapping id_102</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="masters-grid">
+                    
+                    <!-- Left Sidebar Master Directory Selector -->
+                    <aside class="master-tabs-list">
+                        <button class="master-tab-btn active" data-sheet="CUSTOMER_MASTER">
+                            <span class="material-symbols-rounded">groups</span>
+                            <span>Customer Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="VENDOR_MASTER">
+                            <span class="material-symbols-rounded">store</span>
+                            <span>Vendor Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="PRODUCT_MASTER">
+                            <span class="material-symbols-rounded">inventory_2</span>
+                            <span>Product Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="ITEM_MASTER">
+                            <span class="material-symbols-rounded">precision_manufacturing</span>
+                            <span>Item Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="HSN_MASTER">
+                            <span class="material-symbols-rounded">gavel</span>
+                            <span>HSN Code Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="GST_MASTER">
+                            <span class="material-symbols-rounded">percent</span>
+                            <span>GST Tax Master</span>
+                        </button>
+                        <button class="master-tab-btn" data-sheet="UOM_MASTER">
+                            <span class="material-symbols-rounded">square_foot</span>
+                            <span>UOM Unit Master</span>
+                        </button>
+                    </aside>
+
+                    <!-- Right Structural Content Frame -->
+                    <section class="masters-content-pane">
+                        <div class="table-container">
+                            <div class="table-header">
+                                <h2 class="table-title" id="activeMasterTitle">Customer Master Records</h2>
+                                <div style="display: flex; gap: 12px; align-items: center;">
+                                    <div class="search-box" style="width: 240px;">
+                                        <span class="material-symbols-rounded">search</span>
+                                        <input type="text" id="masterSearch" placeholder="Local registry search...">
+                                    </div>
+                                    <button class="btn btn-primary" id="btnCreateMaster">Create Record</button>
+                                </div>
+                            </div>
+                            <div class="table-wrapper">
+                                <table class="enterprise-table" id="masterTable">
+                                    <thead>
+                                        <tr id="masterTableHead">
+                                            <!-- Managed dynamically by script -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="masterTableBody">
+                                        <!-- Real values populate here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </main>
-
         </div>
     </div>
 
+    <!-- Master Form CRUD Slide-over Modal Dialog -->
+    <div class="modal-overlay" id="masterModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Create Master Record</h3>
+                <button onclick="MastersManager.closeModal()" style="background:none; border:none; cursor:pointer;"><span class="material-symbols-rounded">close</span></button>
+            </div>
+            <form id="masterRecordForm" onsubmit="MastersManager.handleFormSubmit(event)">
+                <div class="modal-body" id="modalFieldsContainer">
+                    <!-- Configured schema inputs generated dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="MastersManager.closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveMaster">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Engine Script Registries -->
     <script src="../js/app.js"></script>
+    <script src="../js/masters.js"></script>
 </body>
 </html>
