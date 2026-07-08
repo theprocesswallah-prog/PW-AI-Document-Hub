@@ -1,8 +1,91 @@
-<div class="login-wrapper" style="display: grid; grid-template-columns: 1.2fr 1fr; height: 100vh; width: 100vw; background-color: var(--background); overflow: hidden;">
+<style>
+    /* --- Premium SaaS Micro-Interactions & Brand Classes --- */
+    .login-input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+    }
     
-    <!-- Left Panel: Corporate Branding Showcase -->
+    .login-field {
+        width: 100%;
+        border: 1.5px solid var(--border-color);
+        border-radius: 12px;
+        padding: 12px 14px 12px 42px;
+        font-size: 13px;
+        color: var(--text-primary);
+        outline: none;
+        background-color: #FFFFFF;
+        transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+    }
+    
+    .login-field:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px rgba(94, 53, 177, 0.12);
+    }
+    
+    .login-field:disabled {
+        background-color: #F1F5F9;
+        color: var(--text-light);
+        cursor: not-allowed;
+    }
+
+    /* Interactive Session Init Button */
+    .btn-login-submit {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 13px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        background-color: var(--primary);
+        color: #FFFFFF;
+        box-shadow: 0 2px 4px rgba(94, 53, 177, 0.15);
+        transition: all var(--transition-speed) ease;
+        position: relative;
+    }
+
+    .btn-login-submit:hover:not(:disabled) {
+        background-color: var(--secondary);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .btn-login-submit:active {
+        transform: translateY(0);
+    }
+
+    .btn-login-submit:disabled {
+        background-color: var(--text-light);
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* Core Spinner Component */
+    .login-spinner {
+        width: 18px;
+        height: 100%;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #FFFFFF;
+        border-radius: 50%;
+        display: none;
+        animation: spinLoader 0.6s linear infinite;
+    }
+
+    @keyframes spinLoader {
+        to { transform: rotate(360deg); }
+    }
+</style>
+
+<div class="app-container" style="display: grid; grid-template-columns: 1.2fr 1fr; height: 100vh; width: 100vw; background-color: var(--background); overflow: hidden;">
+    
+    <!-- Left Section: Premium Corporate Branding Showcase -->
     <div class="login-branding-side" style="background: linear-gradient(135deg, #1E1B4B 0%, #311042 100%); display: flex; flex-direction: column; justify-content: space-between; padding: 48px; color: #FFFFFF; position: relative; overflow: hidden;">
-        <!-- Backdrop Ambient Glow Rings -->
         <div style="position: absolute; width: 600px; height: 600px; background-color: var(--primary); opacity: 0.15; filter: blur(120px); border-radius: 50%; top: -100px; left: -100px; pointer-events: none;"></div>
         <div style="position: absolute; width: 400px; height: 400px; background-color: var(--accent); opacity: 0.1; filter: blur(100px); border-radius: 50%; bottom: -50px; right: -50px; pointer-events: none;"></div>
 
@@ -12,62 +95,63 @@
                 <span class="material-symbols-rounded" style="font-size: 28px;">neurology</span>
             </div>
             <div>
-                <h1 style="font-size: 18px; font-weight: 700; tracking-tight; line-height: 1;">Processwallah</h1>
+                <h1 style="font-size: 18px; font-weight: 700; line-height: 1; letter-spacing: -0.5px;">Processwallah</h1>
                 <span style="font-size: 11px; font-weight: 600; color: var(--accent); tracking-wider; text-transform: uppercase;">AI OCR Data Platform</span>
             </div>
         </div>
 
-        <!-- Dynamic Marketing Surcharge Panel -->
+        <!-- Middle Marketing Area -->
         <div style="z-index: 10; max-width: 480px; margin: auto 0;">
-            <span style="background-color: rgba(126, 87, 194, 0.2); color: #C084FC; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.8px;">Version 1.0 Release</span>
+            <span style="background-color: rgba(126, 87, 194, 0.2); color: #C084FC; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.8px;">SME Solution Suite</span>
             <h2 style="font-size: 32px; font-weight: 700; margin-top: 16px; line-height: 1.2; letter-spacing: -0.5px;">Extract values from structured invoices in under 2 minutes.</h2>
             <p style="color: #94A3B8; font-size: 14px; margin-top: 12px; line-height: 1.5;">Direct AI mapping integrations replace legacy manual entry tasks. Mapped records persist safely inside your secure Supabase PostgreSQL database.</p>
         </div>
 
-        <!-- Branding Footer -->
+        <!-- Dynamic Branding Footer -->
         <div style="z-index: 10; font-size: 12px; color: #64748B;">
             &copy; 2025 Processwallah OCR Engine V1.0. All Rights Reserved.
         </div>
     </div>
 
-    <!-- Right Panel: Glass-morphism Ingress Security Gateway -->
+    <!-- Right Section: Security Gateway Access Panel -->
     <div class="login-form-side" style="display: flex; align-items: center; justify-content: center; padding: 48px; background-color: #F8FAFC; position: relative;">
         <div class="glass-login-card" style="background-color: #FFFFFF; border: 1px solid var(--border-color); border-radius: 24px; padding: 40px; width: 100%; max-width: 440px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05);">
             
             <div style="margin-bottom: 32px;">
-                <h3 style="font-size: 22px; font-weight: 700; color: var(--text-primary);">Security Gateway Login</h3>
+                <h3 style="font-size: 22px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.5px;">Security Gateway Login</h3>
                 <p style="font-size: 13px; color: var(--text-secondary); margin-top: 6px;">Sign in using your enterprise credentials to access the data workspace.</p>
             </div>
 
-            <form id="loginForm" style="display:flex; flex-direction:column; gap:18px;">
+            <form id="loginForm" style="display:flex; flex-direction:column; gap:20px;">
                 <div class="form-group">
-                    <label class="form-label" style="font-weight: 600;">Username / Identity Email</label>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <span class="material-symbols-rounded" style="position: absolute; left: 12px; color: var(--text-light); font-size:18px;">person</span>
-                        <input type="text" id="fieldUsername" name="username" class="form-input" placeholder="Enter username (e.g., Arshi)" required style="padding-left: 40px;" autocomplete="username">
+                    <label class="form-label" style="font-weight: 600; font-size:12px; color:var(--text-secondary);">Username / Identity Email</label>
+                    <div class="login-input-wrapper">
+                        <span class="material-symbols-rounded" style="position: absolute; left: 14px; color: var(--text-light); font-size:18px;">person</span>
+                        <input type="text" id="fieldUsername" name="username" class="login-field" placeholder="Enter username (e.g., Arshi)" required autocomplete="username">
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-                        <label class="form-label" style="margin-bottom:0; font-weight: 600;">Password</label>
-                        <button type="button" style="background:none; border:none; color: var(--text-secondary); font-size: 11px; cursor: not-allowed;" disabled>Forgot Password?</button>
+                        <label class="form-label" style="margin-bottom:0; font-weight: 600; font-size:12px; color:var(--text-secondary);">Password</label>
+                        <button type="button" style="background:none; border:none; color: var(--text-light); font-size: 11px; cursor: not-allowed;" disabled>Forgot Password?</button>
                     </div>
-                    <div style="position: relative; display: flex; align-items: center;">
-                        <span class="material-symbols-rounded" style="position: absolute; left: 12px; color: var(--text-light); font-size:18px;">lock</span>
-                        <input type="password" id="fieldPassword" name="password" class="form-input" placeholder="•••••" required style="padding-left: 40px;" autocomplete="current-password">
+                    <div class="login-input-wrapper">
+                        <span class="material-symbols-rounded" style="position: absolute; left: 14px; color: var(--text-light); font-size:18px;">lock</span>
+                        <input type="password" id="fieldPassword" name="password" class="login-field" placeholder="••••••••" required autocomplete="current-password">
                     </div>
                 </div>
 
-                <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px;">
-                    <label style="display:flex; align-items:center; gap:8px; font-size:13px; color: var(--text-secondary); cursor: pointer;">
-                        <input type="checkbox" name="remember" style="accent-color: var(--primary); width:16px; height:16px;"> Remember Me
+                <div style="display:flex; align-items:center; justify-content:space-between; margin-top:2px;">
+                    <label style="display:flex; align-items:center; gap:8px; font-size:13px; color: var(--text-secondary); cursor: pointer; user-select:none;">
+                        <input type="checkbox" id="fieldRemember" name="remember" style="accent-color: var(--primary); width:16px; height:16px;"> Remember Me
                     </label>
                 </div>
 
-                <button type="submit" class="btn btn-primary" style="padding: 12px; justify-content: center; font-size: 14px; margin-top: 10px; border-radius: var(--border-radius);">
-                    <span>Initialize Session</span>
-                    <span class="material-symbols-rounded">login</span>
+                <button type="submit" id="btnLoginSubmit" class="btn-login-submit" style="margin-top: 8px;">
+                    <div class="login-spinner" id="loginSubmitSpinner"></div>
+                    <span id="loginSubmitText">Initialize Session</span>
+                    <span class="material-symbols-rounded" id="loginSubmitIcon">login</span>
                 </button>
             </form>
         </div>
@@ -80,23 +164,47 @@
         
         const username = document.getElementById('fieldUsername').value.trim();
         const password = document.getElementById('fieldPassword').value;
+        const rememberMe = document.getElementById('fieldRemember').checked;
 
-        const loader = document.getElementById('pageLoader');
-        if (loader) loader.classList.add('active');
+        // UI Form Lock State Machine
+        const form = document.getElementById('loginForm');
+        const submitBtn = document.getElementById('btnLoginSubmit');
+        const btnSpinner = document.getElementById('loginSubmitSpinner');
+        const btnText = document.getElementById('loginSubmitText');
+        const btnIcon = document.getElementById('loginSubmitIcon');
+        const inputs = form.querySelectorAll('input, button');
+
+        // Transition to Loading State
+        inputs.forEach(el => el.disabled = true);
+        submitBtn.disabled = true;
+        btnSpinner.style.display = 'block';
+        btnIcon.style.display = 'none';
+        btnText.innerText = 'Signing In...';
 
         try {
             if (!window.AuthService) {
                 throw new Error("Core Authentication Service is offline. Check script imports.");
             }
 
-            // Authenticate user session
+            // Authenticate session via Supabase
             const session = await window.AuthService.login(username, password);
             if (session) {
+                if (rememberMe) {
+                    localStorage.setItem('PROCESSWALLAH_REMEMBER_USER', username);
+                } else {
+                    localStorage.removeItem('PROCESSWALLAH_REMEMBER_USER');
+                }
+
+                // Successful login
+                submitBtn.style.backgroundColor = '#10B981'; // Transition to green
+                btnSpinner.style.display = 'none';
+                btnText.innerText = 'Authenticated';
+                
                 if (window.NotificationService) {
                     window.NotificationService.showSuccess("Session authenticated successfully.");
                 }
                 
-                // Fetch profiles and run setup
+                // Fetch profiles and update UI headers
                 await window.AppManager.initializeActiveSession();
 
                 // Redirect to dashboard
@@ -105,12 +213,34 @@
                 }, 800);
             }
         } catch (err) {
-            console.error("Authentication failed:", err.message);
+            console.error("Login verification aborted:", err.message);
+            
+            // Transition to Error State
+            submitBtn.style.backgroundColor = '#EF4444'; // Transition to red
+            btnSpinner.style.display = 'none';
+            btnText.innerText = 'Access Denied';
+            
             if (window.NotificationService) {
                 window.NotificationService.showError(`Access Refused: ${err.message}`);
             }
-        } finally {
-            if (loader) loader.classList.remove('active');
+
+            // Re-enable form inputs on failure
+            setTimeout(() => {
+                inputs.forEach(el => el.disabled = false);
+                submitBtn.disabled = false;
+                submitBtn.style.backgroundColor = ''; // Restore default color
+                btnIcon.style.display = 'block';
+                btnText.innerText = 'Initialize Session';
+            }, 1500);
+        }
+    });
+
+    // Populate user credentials if Remember Me was selected previously
+    document.addEventListener('DOMContentLoaded', () => {
+        const rememberedUser = localStorage.getItem('PROCESSWALLAH_REMEMBER_USER');
+        if (rememberedUser) {
+            document.getElementById('fieldUsername').value = rememberedUser;
+            document.getElementById('fieldRemember').checked = true;
         }
     });
 </script>
