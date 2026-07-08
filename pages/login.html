@@ -69,7 +69,7 @@
     /* Core Spinner Component */
     .login-spinner {
         width: 18px;
-        height: 100%;
+        height: 18px;
         border: 2px solid rgba(255, 255, 255, 0.3);
         border-top-color: #FFFFFF;
         border-radius: 50%;
@@ -91,24 +91,24 @@
 
         <!-- Branding Logo Header -->
         <div style="display: flex; align-items: center; gap: 12px; z-index: 10;">
-            <div style="height: 48px; width: 42px; background-color: #FFFFFF; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: var(--shadow-sm);">
+            <div style="height: 48px; width: 42px; background-color: #FFFFFF; border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center; color: var(--primary); box-shadow: var(--shadow-sm); cursor: default; user-select: none;">
                 <span class="material-symbols-rounded" style="font-size: 28px;">neurology</span>
             </div>
-            <div>
+            <div style="user-select: none;">
                 <h1 style="font-size: 18px; font-weight: 700; line-height: 1; letter-spacing: -0.5px;">Processwallah</h1>
                 <span style="font-size: 11px; font-weight: 600; color: var(--accent); tracking-wider; text-transform: uppercase;">AI OCR Data Platform</span>
             </div>
         </div>
 
         <!-- Middle Marketing Area -->
-        <div style="z-index: 10; max-width: 480px; margin: auto 0;">
+        <div style="z-index: 10; max-width: 480px; margin: auto 0; user-select: none;">
             <span style="background-color: rgba(126, 87, 194, 0.2); color: #C084FC; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.8px;">SME Solution Suite</span>
             <h2 style="font-size: 32px; font-weight: 700; margin-top: 16px; line-height: 1.2; letter-spacing: -0.5px;">Extract values from structured invoices in under 2 minutes.</h2>
             <p style="color: #94A3B8; font-size: 14px; margin-top: 12px; line-height: 1.5;">Direct AI mapping integrations replace legacy manual entry tasks. Mapped records persist safely inside your secure Supabase PostgreSQL database.</p>
         </div>
 
         <!-- Dynamic Branding Footer -->
-        <div style="z-index: 10; font-size: 12px; color: #64748B;">
+        <div style="z-index: 10; font-size: 12px; color: #64748B; user-select: none;">
             &copy; 2025 Processwallah OCR Engine V1.0. All Rights Reserved.
         </div>
     </div>
@@ -159,88 +159,94 @@
 </div>
 
 <script>
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const username = document.getElementById('fieldUsername').value.trim();
-        const password = document.getElementById('fieldPassword').value;
-        const rememberMe = document.getElementById('fieldRemember').checked;
-
-        // UI Form Lock State Machine
+    (function() {
         const form = document.getElementById('loginForm');
-        const submitBtn = document.getElementById('btnLoginSubmit');
-        const btnSpinner = document.getElementById('loginSubmitSpinner');
-        const btnText = document.getElementById('loginSubmitText');
-        const btnIcon = document.getElementById('loginSubmitIcon');
-        const inputs = form.querySelectorAll('input, button');
-
-        // Transition to Loading State
-        inputs.forEach(el => el.disabled = true);
-        submitBtn.disabled = true;
-        btnSpinner.style.display = 'block';
-        btnIcon.style.display = 'none';
-        btnText.innerText = 'Signing In...';
-
-        try {
-            if (!window.AuthService) {
-                throw new Error("Core Authentication Service is offline. Check script imports.");
-            }
-
-            // Authenticate session via Supabase
-            const session = await window.AuthService.login(username, password);
-            if (session) {
-                if (rememberMe) {
-                    localStorage.setItem('PROCESSWALLAH_REMEMBER_USER', username);
-                } else {
-                    localStorage.removeItem('PROCESSWALLAH_REMEMBER_USER');
-                }
-
-                // Successful login
-                submitBtn.style.backgroundColor = '#10B981'; // Transition to green
-                btnSpinner.style.display = 'none';
-                btnText.innerText = 'Authenticated';
-                
-                if (window.NotificationService) {
-                    window.NotificationService.showSuccess("Session authenticated successfully.");
-                }
-                
-                // Fetch profiles and update UI headers
-                await window.AppManager.initializeActiveSession();
-
-                // Redirect to dashboard
-                setTimeout(() => {
-                    window.location.hash = '#/dashboard';
-                }, 800);
-            }
-        } catch (err) {
-            console.error("Login verification aborted:", err.message);
-            
-            // Transition to Error State
-            submitBtn.style.backgroundColor = '#EF4444'; // Transition to red
-            btnSpinner.style.display = 'none';
-            btnText.innerText = 'Access Denied';
-            
-            if (window.NotificationService) {
-                window.NotificationService.showError(`Access Refused: ${err.message}`);
-            }
-
-            // Re-enable form inputs on failure
-            setTimeout(() => {
-                inputs.forEach(el => el.disabled = false);
-                submitBtn.disabled = false;
-                submitBtn.style.backgroundColor = ''; // Restore default color
-                btnIcon.style.display = 'block';
-                btnText.innerText = 'Initialize Session';
-            }, 1500);
-        }
-    });
-
-    // Populate user credentials if Remember Me was selected previously
-    document.addEventListener('DOMContentLoaded', () => {
+        
+        // Instant non-blocking credential restoration execution (No DOMContentLoaded dependency wrapper)
         const rememberedUser = localStorage.getItem('PROCESSWALLAH_REMEMBER_USER');
         if (rememberedUser) {
-            document.getElementById('fieldUsername').value = rememberedUser;
-            document.getElementById('fieldRemember').checked = true;
+            const userField = document.getElementById('fieldUsername');
+            const rememberCheck = document.getElementById('fieldRemember');
+            if (userField) userField.value = rememberedUser;
+            if (rememberCheck) rememberCheck.checked = true;
         }
-    });
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const username = document.getElementById('fieldUsername').value.trim();
+                const password = document.getElementById('fieldPassword').value;
+                const rememberMe = document.getElementById('fieldRemember').checked;
+
+                const submitBtn = document.getElementById('btnLoginSubmit');
+                const btnSpinner = document.getElementById('loginSubmitSpinner');
+                const btnText = document.getElementById('loginSubmitText');
+                const btnIcon = document.getElementById('loginSubmitIcon');
+                const inputs = form.querySelectorAll('input, button');
+
+                // Toggle Loading Indicator
+                inputs.forEach(el => el.disabled = true);
+                submitBtn.disabled = true;
+                btnSpinner.style.display = 'block';
+                btnIcon.style.display = 'none';
+                btnText.innerText = 'Signing In...';
+
+                try {
+                    if (!window.AuthService) {
+                        throw new Error("Core Authentication Service is offline. Check script imports.");
+                    }
+
+                    // Authenticate session via Supabase
+                    const session = await window.AuthService.login(username, password);
+                    if (session) {
+                        if (rememberMe) {
+                            localStorage.setItem('PROCESSWALLAH_REMEMBER_USER', username);
+                        } else {
+                            localStorage.removeItem('PROCESSWALLAH_REMEMBER_USER');
+                        }
+
+                        // Success Status Transition
+                        submitBtn.style.backgroundColor = '#10B981'; // Transition to green
+                        btnSpinner.style.display = 'none';
+                        btnText.innerText = 'Authenticated';
+                        
+                        if (window.NotificationService) {
+                            window.NotificationService.showSuccess("Session authenticated successfully.");
+                        }
+                        
+                        // Update UI Header values
+                        if (window.AppManager) {
+                            await window.AppManager.initializeActiveSession();
+                        }
+
+                        // Redirect to dashboard
+                        setTimeout(() => {
+                            window.location.hash = '#/dashboard';
+                        }, 800);
+                    }
+                } catch (err) {
+                    console.error("Login verification aborted:", err.message);
+                    
+                    // Error Status Transition
+                    submitBtn.style.backgroundColor = '#EF4444'; // Transition to red
+                    btnSpinner.style.display = 'none';
+                    btnText.innerText = 'Access Denied';
+                    
+                    if (window.NotificationService) {
+                        window.NotificationService.showError(`Access Refused: ${err.message}`);
+                    }
+
+                    // Reset form to active
+                    setTimeout(() => {
+                        inputs.forEach(el => el.disabled = false);
+                        submitBtn.disabled = false;
+                        submitBtn.style.backgroundColor = ''; // Restore default color
+                        btnIcon.style.display = 'block';
+                        btnText.innerText = 'Initialize Session';
+                    }, 1500);
+                }
+            });
+        }
+    })();
 </script>
