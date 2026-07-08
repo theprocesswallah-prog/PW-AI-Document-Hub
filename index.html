@@ -10,23 +10,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Processwallah OCR - Dashboard</title>
+    <title>Processwallah OCR Engine V1.0</title>
+    
+    <!-- Design System Typography & Standard Iconography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/responsive.css">
+    
+    <!-- Central Styling Assets -->
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+
+    <!-- Supabase JS Client SDK CDN Layer -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-    <!-- Top Loading Indicator -->
+    <!-- Unified Page Loader Surcharge -->
     <div class="page-loader" id="pageLoader">
         <div class="page-loader-bar"></div>
     </div>
 
-    <div class="app-container">
+    <!-- Centralized App Shell Base Layout -->
+    <div class="app-container" id="appShellContainer" style="display: none;">
         
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation Drawer -->
         <aside class="app-sidebar" id="appSidebar">
             <div class="sidebar-header">
                 <div class="brand-logo">
@@ -34,206 +42,138 @@
                 </div>
                 <div class="brand-info">
                     <h1 class="brand-name">Processwallah</h1>
-                    <span class="brand-tag">OCR ENGINE V1.0</span>
+                    <span class="brand-tag">OCR V1.0</span>
                 </div>
             </div>
 
             <nav class="sidebar-nav">
-                <a href="index.html" class="nav-link active">
+                <a href="#/dashboard" class="nav-link" id="nav-dashboard">
                     <span class="material-symbols-rounded">dashboard</span>
                     <span class="nav-label">Dashboard</span>
                 </a>
                 
-                <div class="nav-group-label">Sales Department</div>
-                <a href="pages/sales-upload.html" class="nav-link">
+                <div class="nav-group-label">Sales Inbound</div>
+                <a href="#/sales/upload" class="nav-link" id="nav-sales-upload">
                     <span class="material-symbols-rounded">upload_file</span>
                     <span class="nav-label">AI Upload</span>
                 </a>
-                <a href="pages/sales-register.html" class="nav-link">
+                <a href="#/sales/register" class="nav-link" id="nav-sales-register">
                     <span class="material-symbols-rounded">analytics</span>
                     <span class="nav-label">Sales Register</span>
                 </a>
 
-                <div class="nav-group-label">Purchase Department</div>
-                <a href="pages/purchase-upload.html" class="nav-link">
+                <div class="nav-group-label">Purchase Inbound</div>
+                <a href="#/purchase/upload" class="nav-link" id="nav-purchase-upload">
                     <span class="material-symbols-rounded">receipt_long</span>
                     <span class="nav-label">Bill Upload</span>
                 </a>
-                <a href="pages/purchase-register.html" class="nav-link">
+                <a href="#/purchase/register" class="nav-link" id="nav-purchase-register">
                     <span class="material-symbols-rounded">payments</span>
                     <span class="nav-label">Purchase Register</span>
                 </a>
 
                 <div class="nav-group-label">System</div>
-                <a href="pages/masters.html" class="nav-link">
-                    <span class="material-symbols-rounded">database</span>
-                    <span class="nav-label">Masters</span>
-                </a>
-                <a href="pages/settings.html" class="nav-link">
+                <div class="sidebar-submenu-wrapper">
+                    <span class="nav-submenu-label nav-group-label" style="margin: 0; padding-left: 8px;">Masters Catalog</span>
+                    <div style="padding-left: 12px; display:flex; flex-direction:column; gap:4px; margin-top:6px;">
+                        <a href="#/masters/customer" class="nav-link" id="nav-masters-customer">
+                            <span class="material-symbols-rounded">groups</span>
+                            <span class="nav-label">Customer</span>
+                        </a>
+                        <a href="#/masters/vendor" class="nav-link" id="nav-masters-vendor">
+                            <span class="material-symbols-rounded">store</span>
+                            <span class="nav-label">Vendor</span>
+                        </a>
+                        <a href="#/masters/product" class="nav-link" id="nav-masters-product">
+                            <span class="material-symbols-rounded">inventory_2</span>
+                            <span class="nav-label">Product</span>
+                        </a>
+                        <a href="#/masters/item" class="nav-link" id="nav-masters-item">
+                            <span class="material-symbols-rounded">precision_manufacturing</span>
+                            <span class="nav-label">Item</span>
+                        </a>
+                    </div>
+                </div>
+
+                <a href="#/settings" class="nav-link" id="nav-settings" style="margin-top: 12px;">
                     <span class="material-symbols-rounded">settings</span>
                     <span class="nav-label">Settings</span>
                 </a>
             </nav>
 
             <div class="sidebar-footer">
-                <div class="system-status">
-                    <span class="status-indicator online"></span>
-                    <span class="status-text">Gemini Engine Ready</span>
-                </div>
+                <a href="#/profile" class="nav-link" id="nav-profile" style="margin-bottom: 0;">
+                    <span class="material-symbols-rounded">account_circle</span>
+                    <span class="nav-label">User Profile</span>
+                </a>
             </div>
         </aside>
 
-        <!-- Main Workspace Frame -->
+        <!-- Right Main Content Panel Layout -->
         <div class="main-layout">
             
-            <!-- Structural Top Header -->
+            <!-- Global Top Navigation Bar -->
             <header class="app-header">
                 <div class="header-left">
                     <button class="menu-toggle-btn" id="menuToggle" aria-label="Toggle Navigation">
                         <span class="material-symbols-rounded">menu</span>
                     </button>
                     <div class="breadcrumb">
-                        <span class="breadcrumb-parent">Workspace</span>
+                        <span class="breadcrumb-parent">Processwallah Engine</span>
                         <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-current">Dashboard</span>
+                        <span class="breadcrumb-current" id="currentBreadcrumbHeader">Dashboard</span>
                     </div>
                 </div>
 
                 <div class="header-right">
-                    <div class="search-box">
-                        <span class="material-symbols-rounded">search</span>
-                        <input type="text" placeholder="Search invoices, purchase bills..." aria-label="Search">
-                    </div>
-                    
-                    <button class="notification-bell" aria-label="Notifications">
+                    <button class="notification-bell" aria-label="Notifications" onclick="NotificationService.showInfo('No pending system notifications.')">
                         <span class="material-symbols-rounded">notifications</span>
-                        <span class="notification-badge"></span>
                     </button>
 
                     <div class="session-stat">
                         <span class="material-symbols-rounded">bolt</span>
-                        <span class="stat-lbl">Session Avg: <strong>1m 45s</strong></span>
+                        <span class="stat-lbl">Latency Check: <strong id="latencyCheckIndicator">0 ms</strong></span>
                     </div>
                     
-                    <div class="user-profile">
+                    <div class="user-profile" onclick="window.location.hash = '#/profile'" style="cursor: pointer;">
                         <div class="profile-details">
-                            <span class="profile-name">Finance Operations</span>
-                            <span class="profile-role">Department Admin</span>
+                            <span class="profile-name" id="globalProfileHeaderName">Guest Identity</span>
+                            <span class="profile-role" id="globalProfileHeaderRole">Loading...</span>
                         </div>
-                        <div class="profile-avatar">FO</div>
+                        <div class="profile-avatar" id="globalProfileHeaderAvatar">G</div>
                     </div>
                 </div>
             </header>
 
-            <!-- Main Content Viewport -->
-            <main class="app-content-viewport">
-                
-                <!-- Core KPI Card Matrix -->
-                <div class="card-grid">
-                    <div class="metric-card">
-                        <div class="metric-info">
-                            <h3>Total Uploaded</h3>
-                            <div class="metric-value">1,482</div>
-                            <div class="metric-change positive">
-                                <span class="material-symbols-rounded">arrow_upward</span>
-                                <span>+14% this month</span>
-                            </div>
-                        </div>
-                        <div class="metric-icon purple">
-                            <span class="material-symbols-rounded">cloud_upload</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-info">
-                            <h3>AI Accuracy</h3>
-                            <div class="metric-value">96.4%</div>
-                            <div class="metric-change positive">
-                                <span class="material-symbols-rounded">trending_up</span>
-                                <span>Confidence optimal</span>
-                            </div>
-                        </div>
-                        <div class="metric-icon emerald">
-                            <span class="material-symbols-rounded">verified_user</span>
-                        </div>
-                    </div>
-
-                    <div class="metric-card">
-                        <div class="metric-info">
-                            <h3>Pending Review</h3>
-                            <div class="metric-value">18</div>
-                            <div class="metric-change neutral">
-                                <span>Requires verification</span>
-                            </div>
-                        </div>
-                        <div class="metric-icon amber">
-                            <span class="material-symbols-rounded">pending_actions</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Document Execution Queue Register -->
-                <div class="table-container">
-                    <div class="table-header">
-                        <h2 class="table-title">Recent Document Extractions Queue</h2>
-                        <div class="search-box" style="width: 220px;">
-                            <span class="material-symbols-rounded">search</span>
-                            <input type="text" id="tableSearch" placeholder="Filter pipeline...">
-                        </div>
-                    </div>
-                    <div class="table-wrapper">
-                        <table class="enterprise-table">
-                            <thead>
-                                <tr>
-                                    <th>Document Ref</th>
-                                    <th>Partner/Vendor</th>
-                                    <th>Date</th>
-                                    <th>AI Confidence</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td style="font-weight: 600;">INV-2025-0814</td>
-                                    <td>Acme Industrial Supplies</td>
-                                    <td>Jan 24, 2025</td>
-                                    <td>98%</td>
-                                    <td>$12,450.00</td>
-                                    <td><span class="badge synced">Synced to Sheet</span></td>
-                                    <td><a href="pages/sales-upload.html" class="btn btn-secondary" style="padding: 6px 12px; font-size:11px;">View Model</a></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 600;">INV-2025-0813</td>
-                                    <td>Nexus Logistics Ltd</td>
-                                    <td>Jan 23, 2025</td>
-                                    <td>74%</td>
-                                    <td>$1,890.00</td>
-                                    <td><span class="badge pending">Action Required</span></td>
-                                    <td><a href="pages/sales-upload.html" class="btn btn-primary" style="padding: 6px 12px; font-size:11px;">Verify Mapping</a></td>
-                                </tr>
-                                <tr>
-                                    <td style="font-weight: 600;">INV-2025-0812</td>
-                                    <td>Nvidia APAC Division</td>
-                                    <td>Jan 23, 2025</td>
-                                    <td>94%</td>
-                                    <td>$84,000.00</td>
-                                    <td><span class="badge synced">Synced to Sheet</span></td>
-                                    <td><a href="pages/sales-upload.html" class="btn btn-secondary" style="padding: 6px 12px; font-size:11px;">View Model</a></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
+            <!-- Page fragment loading target viewport -->
+            <main class="app-content-viewport" id="mainContentViewport">
+                <!-- Dynamically routed view elements are loaded here -->
             </main>
         </div>
     </div>
 
-    <!-- Application Initialization Scripts -->
-    <script src="js/utils.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/app.js"></script>
+    <!-- Unauthenticated standalone viewport container -->
+    <div id="unauthenticatedViewport" style="display: none; height: 100vh; width: 100vw; overflow: hidden;">
+        <!-- Login viewport is loaded here -->
+    </div>
+
+    <!-- Core App Logic & Global Handlers -->
+    <script src="config/supabase.js"></script>
+    <script src="services/notificationService.js"></script>
+    <script src="services/authService.js"></script>
+    <script src="services/dashboardService.js"></script>
+    <script src="services/customerService.js"></script>
+    <script src="services/vendorService.js"></script>
+    <script src="services/productService.js"></script>
+    <script src="services/itemService.js"></script>
+    <script src="services/salesService.js"></script>
+    <script src="services/purchaseService.js"></script>
+    <script src="services/ocrService.js"></script>
+    <script src="services/aiLearningService.js"></script>
+    <script src="services/exportService.js"></script>
+    
+    <!-- Ingress UI Controllers and App Router -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/router.js"></script>
 </body>
 </html>
