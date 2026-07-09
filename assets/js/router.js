@@ -1,7 +1,7 @@
 /**
  * Processwallah OCR Engine V1.0 - Central SPA Client Router
- * Version 1.0.0
- * Handles dynamic routing and page transitions.
+ * Version 1.0.2
+ * Handles dynamic routing, session guards, and deferred script executions.
  */
 
 const AppRouter = {
@@ -28,7 +28,8 @@ const AppRouter = {
         
         // Initial routing fallback
         if (!window.location.hash) {
-            window.location.hash = '#/login';
+            // DEVELOPMENT MODE - Authentication temporarily bypassed until Settings module is completed.
+            window.location.hash = window.DEVELOPMENT_MODE === true ? '#/dashboard' : '#/login';
         }
     },
 
@@ -46,20 +47,28 @@ const AppRouter = {
             return;
         }
 
+        // DEVELOPMENT MODE - Authentication temporarily bypassed until Settings module is completed.
+        const bypassAuth = window.DEVELOPMENT_MODE === true;
+
+        if (activeHash === '#/login' && bypassAuth) {
+            window.location.hash = '#/dashboard';
+            return;
+        }
+
         // 2. Authentication and Session Guards
         let isSessionAuthenticated = false;
-        if (window.AuthService) {
+        if (window.AuthService && !bypassAuth) {
             const user = await window.AuthService.getCurrentUser();
             isSessionAuthenticated = user !== null;
         }
 
-        if (targetRoute.authed && !isSessionAuthenticated) {
+        if (targetRoute.authed && !isSessionAuthenticated && !bypassAuth) {
             console.warn("Unauthenticated Access Refused. Redirecting to login portal.");
             window.location.hash = '#/login';
             return;
         }
 
-        if (!targetRoute.authed && isSessionAuthenticated && activeHash === '#/login') {
+        if (!targetRoute.authed && isSessionAuthenticated && activeHash === '#/login' && !bypassAuth) {
             console.log("Active session authenticated. Redirecting to dashboard.");
             window.location.hash = '#/dashboard';
             return;
@@ -68,9 +77,9 @@ const AppRouter = {
         // 3. Layout Viewport Rendering
         const appShell = document.getElementById('appShellContainer');
         const authShell = document.getElementById('unauthenticatedViewport');
-        const contentTargetId = targetRoute.authed ? 'mainContentViewport' : 'unauthenticatedViewport';
+        const contentTargetId = (targetRoute.authed || bypassAuth) ? 'mainContentViewport' : 'unauthenticatedViewport';
 
-        if (targetRoute.authed) {
+        if (targetRoute.authed || bypassAuth) {
             appShell.style.display = 'flex';
             authShell.style.display = 'none';
         } else {
@@ -125,6 +134,7 @@ const AppRouter = {
 
     /**
      * Programmatic evaluation of script tags inside injected DOM elements
+     * Incorporates deferred removal to avoid compilation race conditions.
      */
     executePageFragmentScripts(containerElement) {
         const scripts = containerElement.querySelectorAll('script');
@@ -136,7 +146,11 @@ const AppRouter = {
                 executableScript.textContent = script.textContent;
             }
             document.body.appendChild(executableScript);
-            executableScript.remove(); // Purge element references from DOM
+            
+            // Non-blocking timeout allows browser thread to parse and compile textContent before element removal
+            setTimeout(() => {
+                executableScript.remove();
+            }, 100);
         });
     }
 };
