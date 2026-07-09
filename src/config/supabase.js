@@ -1,12 +1,12 @@
 /**
  * Processwallah OCR Engine V1.0 - Central Supabase Client Engine
- * Version 1.0.0
- * Initializes the client connection from verified local configuration states.
+ * Version 1.0.2
+ * Dynamically instantiates the global client connection when credentials update.
  */
 
 const SupabaseConfig = {
     /**
-     * Initializes the client connection
+     * Initializes the client connection from saved browser credentials
      * @returns {Object|null} Authorized Supabase Client instance or null
      */
     initializeClient() {
@@ -21,7 +21,7 @@ const SupabaseConfig = {
 
         try {
             if (typeof supabase !== 'undefined') {
-                // Initialize client
+                // Initialize/Re-initialize client
                 const client = supabase.createClient(url, anonKey, {
                     auth: {
                         persistSession: true,
@@ -44,10 +44,9 @@ const SupabaseConfig = {
     }
 };
 
-// Bind configuration helper to window context
 window.SupabaseConfig = SupabaseConfig;
 
-// Initialize when library and DOM are loaded
+// Initialize automatically on startup
 document.addEventListener('DOMContentLoaded', () => {
     SupabaseConfig.initializeClient();
 });
