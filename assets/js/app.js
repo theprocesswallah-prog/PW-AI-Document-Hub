@@ -1,154 +1,161 @@
 /**
- * Processwallah OCR Engine V1.0 - Central SPA Client Router
- * Version 1.0.1
- * Handles dynamic routing, session guards, and deferred script executions.
+ * Processwallah OCR Engine V1.0 - Central Bootstrapper
+ * Version 1.0.2
+ * Manages active user sessions, measures connection performance, and handles UI updates.
  */
 
-const AppRouter = {
-    // Route mappings to target physical HTML page files
-    routes: {
-        '#/login': { path: 'pages/login.html', title: 'Security Gateway', authed: false },
-        '#/dashboard': { path: 'pages/dashboard.html', title: 'Dashboard', authed: true },
-        '#/sales/upload': { path: 'pages/sales/upload.html', title: 'Sales AI Upload', authed: true },
-        '#/sales/register': { path: 'pages/sales/register.html', title: 'Sales Invoice Register', authed: true },
-        '#/purchase/upload': { path: 'pages/purchase/upload.html', title: 'Purchase Bill Upload', authed: true },
-        '#/purchase/register': { path: 'pages/purchase/register.html', title: 'Purchase Ledger Register', authed: true },
-        '#/masters/customer': { path: 'pages/masters/customer.html', title: 'Customer Master', authed: true },
-        '#/masters/vendor': { path: 'pages/masters/vendor.html', title: 'Vendor Master', authed: true },
-        '#/masters/product': { path: 'pages/masters/product.html', title: 'Product Catalog Master', authed: true },
-        '#/masters/item': { path: 'pages/masters/item.html', title: 'Raw Material Master', authed: true },
-        '#/settings': { path: 'pages/settings.html', title: 'Configurations settings', authed: true },
-        '#/profile': { path: 'pages/profile.html', title: 'User Account Profile', authed: true }
+// DEVELOPMENT MODE - Authentication temporarily bypassed until Settings module is completed.
+window.DEVELOPMENT_MODE = true; 
+
+const AppManager = {
+    async initialize() {
+        this.bindGlobalEvents();
+        await this.initializeActiveSession();
+        this.runDiagnosticsPerformancePing();
     },
 
-    initialize() {
-        // Monitor hash transitions
-        window.addEventListener('hashchange', () => this.evaluateRouteTransition());
-        window.addEventListener('load', () => this.evaluateRouteTransition());
-        
-        // Initial routing fallback
-        if (!window.location.hash) {
-            window.location.hash = '#/login';
+    bindGlobalEvents() {
+        const sidebar = document.getElementById('appSidebar');
+        const menuToggle = document.getElementById('menuToggle');
+
+        // Sidebar responsive menu toggles
+        if (menuToggle && sidebar) {
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (window.innerWidth > 1024) {
+                    sidebar.classList.toggle('collapsed');
+                    localStorage.setItem('sidebar-collapsed', sidebar.classList.contains('collapsed'));
+                } else {
+                    sidebar.classList.toggle('open');
+                }
+            });
         }
     },
 
-    async evaluateRouteTransition() {
-        const activeHash = window.location.hash || '#/login';
-        const targetRoute = this.routes[activeHash];
+    /**
+     * Resolves authenticated user sessions and updates layout headers
+     */
+    async initializeActiveSession() {
+        // DEVELOPMENT MODE - Authentication temporarily bypassed until Settings module is completed.
+        if (window.DEVELOPMENT_MODE === true) {
+            console.log("%cDEVELOPMENT_MODE Active: Security session checks bypassed.", "color: orange; font-weight: bold;");
+            const headerName = document.getElementById('globalProfileHeaderName');
+            const headerRole = document.getElementById('globalProfileHeaderRole');
+            const headerAvatar = document.getElementById('globalProfileHeaderAvatar');
+
+            if (headerName) headerName.innerText = "Arshi (Dev)";
+            if (headerRole) headerRole.innerText = "Admin";
+            if (headerAvatar) headerAvatar.innerText = "A";
+            return;
+        }
+
+        if (!window.supabaseClient) {
+            console.warn("Client Connection Offline. Configure credentials in the Settings panel.");
+            return;
+        }
+
+        try {
+            const user = await window.AuthService.getCurrentUser();
+            if (user) {
+                const profile = await window.AuthService.getUserProfile();
+                if (profile) {
+                    // Update user details in header
+                    const headerName = document.getElementById('globalProfileHeaderName');
+                    const headerRole = document.getElementById('globalProfileHeaderRole');
+                    const headerAvatar = document.getElementById('globalProfileHeaderAvatar');
+
+                    if (headerName) headerName.innerText = profile.display_name || profile.username;
+                    if (headerRole) headerRole.innerText = profile.role;
+                    if (headerAvatar) {
+                        const nameString = profile.display_name || profile.username || 'G';
+                        headerAvatar.innerText = nameString.charAt(0).toUpperCase();
+                    }
+                }
+            } else {
+                // If the user navigates directly without an active session, redirect to the login page
+                if (window.location.hash !== '#/login') {
+                    window.location.hash = '#/login';
+                }
+            }
+        } catch (err) {
+            console.error("Session profile alignment interrupted:", err.message);
+        }
+    },
+
+    /**
+     * Terminate active user sessions securely
+     */
+    async logoutSessionAction() {
+        // DEVELOPMENT MODE - Authentication temporarily bypassed until Settings module is completed.
+        if (window.DEVELOPMENT_MODE === true) {
+            if (window.NotificationService) {
+                window.NotificationService.showSuccess("Development session terminated.");
+            }
+            setTimeout(() => {
+                window.location.hash = '#/login';
+            }, 500);
+            return;
+        }
 
         const loader = document.getElementById('pageLoader');
         if (loader) loader.classList.add('active');
 
-        // 1. Unrecognized route fallback
-        if (!targetRoute) {
-            console.error(`Route "${activeHash}" is not registered in the system map.`);
-            window.location.hash = '#/dashboard';
-            return;
-        }
-
-        // 2. Authentication and Session Guards
-        let isSessionAuthenticated = false;
-        if (window.AuthService) {
-            const user = await window.AuthService.getCurrentUser();
-            isSessionAuthenticated = user !== null;
-        }
-
-        if (targetRoute.authed && !isSessionAuthenticated) {
-            console.warn("Unauthenticated Access Refused. Redirecting to login portal.");
-            window.location.hash = '#/login';
-            return;
-        }
-
-        if (!targetRoute.authed && isSessionAuthenticated && activeHash === '#/login') {
-            console.log("Active session authenticated. Redirecting to dashboard.");
-            window.location.hash = '#/dashboard';
-            return;
-        }
-
-        // 3. Layout Viewport Rendering
-        const appShell = document.getElementById('appShellContainer');
-        const authShell = document.getElementById('unauthenticatedViewport');
-        const contentTargetId = targetRoute.authed ? 'mainContentViewport' : 'unauthenticatedViewport';
-
-        if (targetRoute.authed) {
-            appShell.style.display = 'flex';
-            authShell.style.display = 'none';
-        } else {
-            appShell.style.display = 'none';
-            authShell.style.display = 'block';
-        }
-
-        // 4. Fetch and Load the Page HTML Fragment
         try {
-            const viewport = document.getElementById(contentTargetId);
-            const response = await fetch(targetRoute.path);
-            
-            if (!response.ok) {
-                throw new Error(`Failed to load page resource: ${response.statusText}`);
+            if (window.AuthService) {
+                await window.AuthService.logout();
+                if (window.NotificationService) {
+                    window.NotificationService.showSuccess("User session terminated.");
+                }
+                
+                // Clear header values on logout
+                document.getElementById('globalProfileHeaderName').innerText = "Guest Identity";
+                document.getElementById('globalProfileHeaderRole').innerText = "Offline";
+                document.getElementById('globalProfileHeaderAvatar').innerText = "G";
+
+                setTimeout(() => {
+                    window.location.hash = '#/login';
+                }, 500);
             }
-
-            const htmlFragment = await response.text();
-            viewport.innerHTML = htmlFragment;
-
-            // Update page headers
-            const headerBreadcrumb = document.getElementById('currentBreadcrumbHeader');
-            if (headerBreadcrumb) headerBreadcrumb.innerText = targetRoute.title;
-
-            // Highlight the active sidebar navigation link
-            this.highlightSidebarLink(activeHash);
-
-            // Execute scripts inside the loaded page fragment
-            this.executePageFragmentScripts(viewport);
-
-            // Trigger standard page loader completion
-            if (loader) loader.classList.remove('active');
-
         } catch (err) {
-            console.error("Failed to load routed layout container view:", err);
+            console.error("Sign out failed:", err.message);
             if (window.NotificationService) {
-                window.NotificationService.showError("Failed to render routed page layout.");
+                window.NotificationService.showError("Failed to log out securely.");
             }
+        } finally {
             if (loader) loader.classList.remove('active');
         }
-    },
-
-    highlightSidebarLink(activeHash) {
-        document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
-            const linkHref = link.getAttribute('href');
-            if (linkHref === activeHash) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
     },
 
     /**
-     * Programmatic evaluation of script tags inside injected DOM elements
-     * Incorporates deferred removal to avoid compilation race conditions.
+     * Measures database API connection response time
      */
-    executePageFragmentScripts(containerElement) {
-        const scripts = containerElement.querySelectorAll('script');
-        scripts.forEach(script => {
-            const executableScript = document.createElement('script');
-            if (script.src) {
-                executableScript.src = script.src;
-            } else {
-                executableScript.textContent = script.textContent;
-            }
-            document.body.appendChild(executableScript);
-            
-            // Non-blocking timeout allows browser thread to parse and compile textContent before element removal
-            setTimeout(() => {
-                executableScript.remove();
-            }, 100);
-        });
+    async runDiagnosticsPerformancePing() {
+        const pingIndicator = document.getElementById('latencyCheckIndicator');
+        if (!pingIndicator) return;
+
+        if (!window.supabaseClient) {
+            pingIndicator.innerText = "Offline";
+            pingIndicator.style.color = "#EF4444";
+            return;
+        }
+
+        const startTimestamp = performance.now();
+        try {
+            // Run a lightweight query to measure latency
+            await window.supabaseClient.from('profiles').select('profile_id').limit(1);
+            const latency = Math.round(performance.now() - startTimestamp);
+            pingIndicator.innerText = `${latency} ms`;
+            pingIndicator.style.color = latency > 300 ? "#F59E0B" : "#10B981";
+        } catch (e) {
+            pingIndicator.innerText = "Error";
+            pingIndicator.style.color = "#EF4444";
+        }
     }
 };
 
-// Bind configuration helper to window context
-window.AppRouter = AppRouter;
+// Expose configuration globally
+window.AppManager = AppManager;
 
 document.addEventListener('DOMContentLoaded', () => {
-    AppRouter.initialize();
+    AppManager.initialize();
 });
