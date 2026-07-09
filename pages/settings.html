@@ -1,10 +1,3 @@
-<!-- Supabase Client CDN Integration Layer -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<!-- Environment Configurations and Core Service Modules -->
-<script src="../src/config/supabase.js"></script>
-<script src="../src/services/authService.js"></script>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/styles.css">
     <link rel="stylesheet" href="../css/responsive.css">
-    <!-- Supabase JS Client SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .settings-grid {
             display: grid;
@@ -68,8 +59,9 @@
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background-color: #EF4444; /* Default offline */
+            background-color: #EF4444; /* Default offline color */
             box-shadow: 0 0 8px #EF4444;
+            transition: all var(--transition-speed);
         }
         .status-dot.active {
             background-color: #10B981;
@@ -84,327 +76,256 @@
 </head>
 <body>
 
-    <!-- Top Loading Indicator -->
-    <div class="page-loader" id="pageLoader">
-        <div class="page-loader-bar"></div>
-    </div>
-
-    <div class="app-container">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="app-sidebar" id="appSidebar">
-            <div class="sidebar-header">
-                <div class="brand-logo">
-                    <span class="material-symbols-rounded">neurology</span>
-                </div>
-                <div class="brand-info">
-                    <h1 class="brand-name">Processwallah</h1>
-                    <span class="brand-tag">OCR ENGINE V1.0</span>
-                </div>
-            </div>
-
-            <nav class="sidebar-nav">
-                <a href="../index.html" class="nav-link">
-                    <span class="material-symbols-rounded">dashboard</span>
-                    <span class="nav-label">Dashboard</span>
-                </a>
-                
-                <div class="nav-group-label">Sales Department</div>
-                <a href="universal-workspace.html?type=sales-invoice" class="nav-link">
-                    <span class="material-symbols-rounded">upload_file</span>
-                    <span class="nav-label">AI Upload</span>
-                </a>
-                <a href="sales-register.html" class="nav-link">
-                    <span class="material-symbols-rounded">analytics</span>
-                    <span class="nav-label">Sales Register</span>
-                </a>
-
-                <div class="nav-group-label">Purchase Department</div>
-                <a href="universal-workspace.html?type=purchase-invoice" class="nav-link">
-                    <span class="material-symbols-rounded">receipt_long</span>
-                    <span class="nav-label">Bill Upload</span>
-                </a>
-                <a href="purchase-register.html" class="nav-link">
-                    <span class="material-symbols-rounded">payments</span>
-                    <span class="nav-label">Purchase Register</span>
-                </a>
-
-                <div class="nav-group-label">System</div>
-                <a href="masters.html" class="nav-link">
-                    <span class="material-symbols-rounded">database</span>
-                    <span class="nav-label">Masters</span>
-                </a>
-                <a href="settings.html" class="nav-link active">
-                    <span class="material-symbols-rounded">settings</span>
-                    <span class="nav-label">Settings</span>
-                </a>
-            </nav>
-
-            <div class="sidebar-footer">
-                <div class="system-status">
-                    <span class="status-indicator online"></span>
-                    <span class="status-text">Gemini Engine Ready</span>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Layout Area -->
-        <div class="main-layout">
+    <div class="main-layout">
+        <main class="app-content-viewport" style="padding:0;">
             
-            <header class="app-header">
-                <div class="header-left">
-                    <button class="menu-toggle-btn" id="menuToggle">
-                        <span class="material-symbols-rounded">menu</span>
-                    </button>
-                    <div class="breadcrumb">
-                        <span class="breadcrumb-parent">System</span>
-                        <span class="breadcrumb-separator">/</span>
-                        <span class="breadcrumb-current">Settings & Configurations</span>
-                    </div>
+            <!-- Live Connection Status Tracking Panel -->
+            <div class="status-container">
+                <div>
+                    <h4 style="font-size: 13px; font-weight:600; color:var(--text-primary);">Supabase Connection Status</h4>
+                    <p style="font-size: 11px; color: var(--text-secondary); margin-top:2px;">Displays the real-time operational status of the cloud database connection.</p>
                 </div>
+                <div class="status-badge-indicator">
+                    <span class="status-dot" id="statusIndicatorDot"></span>
+                    <span id="statusIndicatorText" style="color:var(--text-secondary);">Disconnected</span>
+                </div>
+            </div>
 
-                <div class="header-right">
-                    <button class="notification-bell" aria-label="Notifications">
-                        <span class="material-symbols-rounded">notifications</span>
-                    </button>
-                    <div class="user-profile">
-                        <div class="profile-details">
-                            <span class="profile-name">Finance Operations</span>
-                            <span class="profile-role">Department Admin</span>
+            <form id="settingsForm">
+                <div class="settings-grid">
+                    
+                    <!-- Panel A: Supabase Cloud Environment Connectors -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <span class="material-symbols-rounded" style="color: var(--primary);">cloud_sync</span>
+                            <h3 class="settings-card-title">Supabase Database Connection</h3>
                         </div>
-                        <div class="profile-avatar">FO</div>
-                    </div>
-                </div>
-            </header>
-
-            <main class="app-content-viewport">
-                
-                <!-- Live Connection Status Tracking Panel -->
-                <div class="status-container">
-                    <div>
-                        <h4 style="font-size: 13px; font-weight:600; color:var(--text-primary);">Supabase Connection Status</h4>
-                        <p style="font-size: 11px; color: var(--text-secondary); margin-top:2px;">Displays the real-time operational status of the cloud database connection.</p>
-                    </div>
-                    <div class="status-badge-indicator">
-                        <span class="status-dot" id="statusIndicatorDot"></span>
-                        <span id="statusIndicatorText" style="color:var(--text-secondary);">Disconnected</span>
-                    </div>
-                </div>
-
-                <form id="settingsForm">
-                    <div class="settings-grid">
                         
-                        <!-- Panel A: Supabase Cloud Environment Connectors -->
-                        <div class="settings-card">
-                            <div class="settings-card-header">
-                                <span class="material-symbols-rounded" style="color: var(--primary);">cloud_sync</span>
-                                <h3 class="settings-card-title">Supabase Database Connection</h3>
+                        <div class="form-group">
+                            <label class="form-label">Supabase Project URL *</label>
+                            <input type="url" id="fieldSupabaseUrl" name="supabaseUrl" class="form-input" placeholder="https://your-project-id.supabase.co" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Supabase Anonymous Key *</label>
+                            <input type="password" id="fieldSupabaseKey" name="supabaseKey" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required>
+                        </div>
+                    </div>
+
+                    <!-- Panel B: Dynamic Ingestion Parameters & Gemini Controls -->
+                    <div class="settings-card">
+                        <div class="settings-card-header">
+                            <span class="material-symbols-rounded" style="color: #10B981;">folder_open</span>
+                            <h3 class="settings-card-title">AI Engine & Cognitive Calibration</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Gemini API Key *</label>
+                            <input type="password" id="fieldGeminiKey" name="geminiKey" class="form-input" placeholder="AIzaSy..." required>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label class="form-label">Active OCR Parsing Model</label>
+                                <select class="form-input" id="fieldOcrModel" name="ocrModel" style="background: none;">
+                                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Recommended)</option>
+                                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Dense Tables)</option>
+                                </select>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">Supabase Project URL *</label>
-                                <input type="url" id="fieldSupabaseUrl" name="supabaseUrl" class="form-input" placeholder="https://your-project-id.supabase.co" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Supabase Anonymous Key *</label>
-                                <input type="password" id="fieldSupabaseKey" name="supabaseKey" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required>
-                            </div>
-                        </div>
-
-                        <!-- Panel B: Dynamic Ingestion Parameters & Gemini Controls -->
-                        <div class="settings-card">
-                            <div class="settings-card-header">
-                                <span class="material-symbols-rounded" style="color: #10B981;">folder_open</span>
-                                <h3 class="settings-card-title">AI Engine & Cognitive Calibration</h3>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Gemini API Key *</label>
-                                <input type="password" id="fieldGeminiKey" name="geminiKey" class="form-input" placeholder="AIzaSy..." required>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
-                                <div class="form-group">
-                                    <label class="form-label">Active OCR Parsing Model</label>
-                                    <select class="form-input" id="fieldOcrModel" name="ocrModel" style="background: none;">
-                                        <option value="gemini-1.5-flash">Gemini 1.5 Flash (Recommended)</option>
-                                        <option value="gemini-1.5-pro">Gemini 1.5 Pro (Dense Tables)</option>
-                                    </select>
-                                </div>
-                                
-                                <div class="form-group">
-                                    <label class="form-label" style="display:flex; justify-content:space-between;">
-                                        <span>Auto Learning</span>
-                                        <span id="learningStatusLabel" style="font-weight:700; color:var(--primary);">ON</span>
-                                    </label>
-                                    <select class="form-input" id="fieldAutoLearning" name="autoLearning" style="background: none;">
-                                        <option value="true">Enabled</option>
-                                        <option value="false">Disabled</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="form-label">Minimum Auto-Approve Confidence (%)</label>
-                                <input type="range" id="fieldConfidence" name="confidence" min="50" max="100" value="90" style="accent-color: var(--primary); cursor: pointer;">
-                                <div style="display:flex; justify-content:space-between; font-size:10px; color: var(--text-secondary); margin-top:4px;">
-                                    <span>70% (Bypass validation easily)</span>
-                                    <span>95% (Safe enterprise lock)</span>
-                                </div>
+                                <label class="form-label" style="display:flex; justify-content:space-between;">
+                                    <span>Auto Learning</span>
+                                    <span id="learningStatusLabel" style="font-weight:700; color:var(--primary);">ON</span>
+                                </label>
+                                <select class="form-input" id="fieldAutoLearning" name="autoLearning" style="background: none;">
+                                    <option value="true">Enabled</option>
+                                    <option value="false">Disabled</option>
+                                </select>
                             </div>
                         </div>
 
+                        <div class="form-group">
+                            <label class="form-label">Minimum Auto-Approve Confidence (%)</label>
+                            <input type="range" id="fieldConfidence" name="confidence" min="50" max="100" value="90" style="accent-color: var(--primary); cursor: pointer;">
+                            <div style="display:flex; justify-content:space-between; font-size:10px; color: var(--text-secondary); margin-top:4px;">
+                                <span>70% (Bypass validation easily)</span>
+                                <span>95% (Safe enterprise lock)</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- Actions Persistances Elements Bar -->
-                    <div style="display:flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top:16px; border-top:1px solid var(--border-color);">
-                        <button type="button" class="btn btn-secondary" id="btnTestConnection" style="padding: 12px 24px;">Test API Link</button>
-                        <button type="submit" class="btn btn-primary" style="padding: 12px 24px;">Save System Configurations</button>
-                    </div>
-                </form>
-            </main>
-        </div>
+                </div>
+
+                <!-- Actions Persistence Elements Bar -->
+                <div style="display:flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top:16px; border-top:1px solid var(--border-color);">
+                    <button type="button" class="btn btn-secondary" id="btnTestConnection" style="padding: 12px 24px;">Test Connection</button>
+                    <button type="submit" class="btn btn-primary" id="btnSaveConfig" style="padding: 12px 24px;">Save Configuration</button>
+                </div>
+            </form>
+        </main>
     </div>
 
-    <!-- Application Engine Script Registries -->
-    <script src="../js/utils.js"></script>
-    <script src="../js/app.js"></script>
     <script>
         /**
-         * Dynamic Settings Page Interface Controller
+         * Encapsulated Settings Page Controller
+         * Executes immediately upon router injection
          */
-        const SettingsController = {
-            initialize() {
-                this.loadSavedSettings();
-                this.bindFormEvents();
-                this.verifyActiveConnection();
-            },
-
-            loadSavedSettings() {
-                document.getElementById('fieldSupabaseUrl').value = localStorage.getItem('PROCESSWALLAH_SUPABASE_URL') || '';
-                document.getElementById('fieldSupabaseKey').value = localStorage.getItem('PROCESSWALLAH_SUPABASE_KEY') || '';
-                document.getElementById('fieldGeminiKey').value = localStorage.getItem('PROCESSWALLAH_GEMINI_KEY') || '';
-                document.getElementById('fieldOcrModel').value = localStorage.getItem('PROCESSWALLAH_OCR_MODEL') || 'gemini-1.5-flash';
-                document.getElementById('fieldConfidence').value = localStorage.getItem('PROCESSWALLAH_CONFIDENCE_THRESHOLD') || '90';
-                document.getElementById('fieldAutoLearning').value = localStorage.getItem('PROCESSWALLAH_AUTO_LEARNING') || 'true';
-            },
-
-            bindFormEvents() {
-                document.getElementById('settingsForm').addEventListener('submit', (e) => this.saveSettings(e));
-                document.getElementById('btnTestConnection').addEventListener('click', () => this.testConnectionAction());
-                
-                // Active status mapping tracker
-                const learningSelect = document.getElementById('fieldAutoLearning');
-                learningSelect.addEventListener('change', (e) => {
-                    document.getElementById('learningStatusLabel').innerText = e.target.value === 'true' ? 'ON' : 'OFF';
-                });
-            },
-
-            saveSettings(event) {
-                event.preventDefault();
-
-                const url = document.getElementById('fieldSupabaseUrl').value.trim();
-                const key = document.getElementById('fieldSupabaseKey').value.trim();
-                const gemini = document.getElementById('fieldGeminiKey').value.trim();
-                const model = document.getElementById('fieldOcrModel').value;
-                const confidence = document.getElementById('fieldConfidence').value;
-                const learning = document.getElementById('fieldAutoLearning').value;
-
-                // Supabase API URL Validator
-                const supabaseUrlRegex = /^https:\/\/[a-zA-Z0-9_-]+\.supabase\.co$/;
-                if (!supabaseUrlRegex.test(url)) {
-                    Toast.show('Invalid Supabase Project URL format. Must match https://project-id.supabase.co', 'error');
-                    return;
-                }
-
-                try {
-                    // Commit to localized state storage keys
-                    localStorage.setItem('PROCESSWALLAH_SUPABASE_URL', url);
-                    localStorage.setItem('PROCESSWALLAH_SUPABASE_KEY', key);
-                    localStorage.setItem('PROCESSWALLAH_GEMINI_KEY', gemini);
-                    localStorage.setItem('PROCESSWALLAH_OCR_MODEL', model);
-                    localStorage.setItem('PROCESSWALLAH_CONFIDENCE_THRESHOLD', confidence);
-                    localStorage.setItem('PROCESSWALLAH_AUTO_LEARNING', learning);
-
-                    // Force trigger connection check initialization
-                    if (window.DatabaseConnector) {
-                        window.DatabaseConnector.initialize();
-                    }
-
-                    Toast.show('Cloud configurations updated successfully', 'success');
+        (function() {
+            const SettingsController = {
+                initialize() {
+                    this.loadSavedSettings();
+                    this.bindFormEvents();
                     this.verifyActiveConnection();
-                } catch (err) {
-                    console.error("Local Storage Write Error:", err);
-                    Toast.show('Failed to save configuration details to the browser.', 'error');
-                }
-            },
+                },
 
-            async testConnectionAction() {
-                const url = document.getElementById('fieldSupabaseUrl').value.trim();
-                const key = document.getElementById('fieldSupabaseKey').value.trim();
+                loadSavedSettings() {
+                    document.getElementById('fieldSupabaseUrl').value = localStorage.getItem('PROCESSWALLAH_SUPABASE_URL') || '';
+                    document.getElementById('fieldSupabaseKey').value = localStorage.getItem('PROCESSWALLAH_SUPABASE_KEY') || '';
+                    document.getElementById('fieldGeminiKey').value = localStorage.getItem('PROCESSWALLAH_GEMINI_KEY') || '';
+                    document.getElementById('fieldOcrModel').value = localStorage.getItem('PROCESSWALLAH_OCR_MODEL') || 'gemini-1.5-flash';
+                    document.getElementById('fieldConfidence').value = localStorage.getItem('PROCESSWALLAH_CONFIDENCE_THRESHOLD') || '90';
+                    document.getElementById('fieldAutoLearning').value = localStorage.getItem('PROCESSWALLAH_AUTO_LEARNING') || 'true';
+                    
+                    const learningSelect = document.getElementById('fieldAutoLearning');
+                    document.getElementById('learningStatusLabel').innerText = learningSelect.value === 'true' ? 'ON' : 'OFF';
+                },
 
-                if (!url || !key) {
-                    Toast.show('Please provide a valid Supabase Project URL and Anonymous API Key to run tests.', 'warning');
-                    return;
-                }
+                bindFormEvents() {
+                    const form = document.getElementById('settingsForm');
+                    const testBtn = document.getElementById('btnTestConnection');
+                    const learningSelect = document.getElementById('fieldAutoLearning');
 
-                Toast.show('Initiating cloud database ping test...', 'info');
-                
-                const dot = document.getElementById('statusIndicatorDot');
-                const text = document.getElementById('statusIndicatorText');
-
-                try {
-                    // Ping Supabase base project client metadata table to verify connection
-                    const clientInstance = supabase.createClient(url, key);
-                    const { data, error } = await clientInstance.from('app_users').select('username').limit(1);
-
-                    if (error) throw error;
-
-                    dot.classList.add('active');
-                    text.innerText = "Connected";
-                    text.style.color = "#10B981";
-                    Toast.show('Ping request successful. Cloud endpoints online.', 'success');
-                } catch (err) {
-                    console.error("Connection link test failed:", err);
-                    dot.classList.remove('active');
-                    text.innerText = "Disconnected";
-                    text.style.color = "var(--text-secondary)";
-                    Toast.show(`Handshake Failed: Verified schema permissions config - ${err.message}`, 'error');
-                }
-            },
-
-            async verifyActiveConnection() {
-                const url = localStorage.getItem('PROCESSWALLAH_SUPABASE_URL');
-                const key = localStorage.getItem('PROCESSWALLAH_SUPABASE_KEY');
-                const dot = document.getElementById('statusIndicatorDot');
-                const text = document.getElementById('statusIndicatorText');
-
-                if (!url || !key || typeof supabase === 'undefined') {
-                    dot.classList.remove('active');
-                    text.innerText = "Disconnected";
-                    return;
-                }
-
-                try {
-                    const client = supabase.createClient(url, key);
-                    const { error } = await client.from('app_users').select('username').limit(1);
-                    if (!error) {
-                        dot.classList.add('active');
-                        text.innerText = "Connected";
-                        text.style.color = "#10B981";
+                    if (form) {
+                        form.addEventListener('submit', (e) => this.saveSettings(e));
                     }
-                } catch (e) {
-                    dot.classList.remove('active');
-                    text.innerText = "Disconnected";
-                }
-            }
-        };
+                    if (testBtn) {
+                        testBtn.addEventListener('click', () => this.testConnectionAction());
+                    }
+                    if (learningSelect) {
+                        learningSelect.addEventListener('change', (e) => {
+                            document.getElementById('learningStatusLabel').innerText = e.target.value === 'true' ? 'ON' : 'OFF';
+                        });
+                    }
+                },
 
-        document.addEventListener('DOMContentLoaded', () => {
+                saveSettings(event) {
+                    event.preventDefault();
+
+                    const url = document.getElementById('fieldSupabaseUrl').value.trim();
+                    const key = document.getElementById('fieldSupabaseKey').value.trim();
+                    const gemini = document.getElementById('fieldGeminiKey').value.trim();
+                    const model = document.getElementById('fieldOcrModel').value;
+                    const confidence = document.getElementById('fieldConfidence').value;
+                    const learning = document.getElementById('fieldAutoLearning').value;
+
+                    // URL Syntax Checker
+                    const supabaseUrlRegex = /^https:\/\/[a-zA-Z0-9_-]+\.supabase\.co$/;
+                    if (!supabaseUrlRegex.test(url)) {
+                        if (window.NotificationService) {
+                            window.NotificationService.showError('Invalid URL format. Must match https://project-id.supabase.co');
+                        }
+                        return;
+                    }
+
+                    try {
+                        localStorage.setItem('PROCESSWALLAH_SUPABASE_URL', url);
+                        localStorage.setItem('PROCESSWALLAH_SUPABASE_KEY', key);
+                        localStorage.setItem('PROCESSWALLAH_GEMINI_KEY', gemini);
+                        localStorage.setItem('PROCESSWALLAH_OCR_MODEL', model);
+                        localStorage.setItem('PROCESSWALLAH_CONFIDENCE_THRESHOLD', confidence);
+                        localStorage.setItem('PROCESSWALLAH_AUTO_LEARNING', learning);
+
+                        // Dynamic Client Re-initialization
+                        if (window.SupabaseConfig) {
+                            window.SupabaseConfig.initializeClient();
+                        }
+
+                        if (window.NotificationService) {
+                            window.NotificationService.showSuccess('System configurations updated successfully');
+                        }
+                        this.verifyActiveConnection();
+                    } catch (err) {
+                        console.error("Local Storage Write Error:", err);
+                        if (window.NotificationService) {
+                            window.NotificationService.showError('Failed to save configuration details.');
+                        }
+                    }
+                },
+
+                async testConnectionAction() {
+                    const url = document.getElementById('fieldSupabaseUrl').value.trim();
+                    const key = document.getElementById('fieldSupabaseKey').value.trim();
+
+                    if (!url || !key) {
+                        if (window.NotificationService) {
+                            window.NotificationService.showWarning('Please provide a URL and Anonymous API Key to run tests.');
+                        }
+                        return;
+                    }
+
+                    if (window.NotificationService) {
+                        window.NotificationService.showInfo('Testing cloud database connection...');
+                    }
+                    
+                    const dot = document.getElementById('statusIndicatorDot');
+                    const text = document.getElementById('statusIndicatorText');
+
+                    try {
+                        // Dynamically test endpoints using temporary sandbox Client instance
+                        const tempClient = supabase.createClient(url, key);
+                        const { error } = await tempClient
+                            .from('customer_master')
+                            .select('customer_id', { count: 'exact', head: true })
+                            .limit(1);
+
+                        if (error) throw error;
+
+                        dot.classList.add('active');
+                        text.innerHTML = "🟢 Connected <span style='display:block; font-size:11px; font-weight:normal; color:#64748B;'>Database Reachable</span>";
+                        
+                        if (window.NotificationService) {
+                            window.NotificationService.showSuccess('Ping request successful. Cloud database connected.');
+                        }
+                    } catch (err) {
+                        console.error("Connection link test failed:", err);
+                        dot.classList.remove('active');
+                        text.innerHTML = "🔴 Disconnected <span style='display:block; font-size:11px; font-weight:normal; color:#EF4444;'>Handshake Failed</span>";
+                        if (window.NotificationService) {
+                            window.NotificationService.showError(`Handshake Failed: ${err.message || 'Incorrect database permissions'}`);
+                        }
+                    }
+                },
+
+                async verifyActiveConnection() {
+                    const dot = document.getElementById('statusIndicatorDot');
+                    const text = document.getElementById('statusIndicatorText');
+
+                    if (!window.supabaseClient) {
+                        dot.classList.remove('active');
+                        text.innerHTML = "Disconnected <span style='display:block; font-size:11px; font-weight:normal; color:#64748B;'>Database Offline</span>";
+                        return;
+                    }
+
+                    try {
+                        const { error } = await window.supabaseClient
+                            .from('customer_master')
+                            .select('customer_id', { count: 'exact', head: true })
+                            .limit(1);
+                        if (error) throw error;
+
+                        dot.classList.add('active');
+                        text.innerHTML = "🟢 Connected <span style='display:block; font-size:11px; font-weight:normal; color:#64748B;'>Database Reachable</span>";
+                    } catch (e) {
+                        dot.classList.remove('active');
+                        text.innerHTML = "🔴 Disconnected <span style='display:block; font-size:11px; font-weight:normal; color:#EF4444;'>Offline State</span>";
+                    }
+                }
+            };
+
+            // Instantiate Immediately upon injection
             SettingsController.initialize();
-            window.SettingsController = SettingsController;
-        });
+        })();
     </script>
 </body>
 </html>
