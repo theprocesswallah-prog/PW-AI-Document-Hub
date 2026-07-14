@@ -79,7 +79,7 @@
     <div class="main-layout">
         <main class="app-content-viewport" style="padding:0;">
             
-            <!-- Live Connection Status Tracking Panel -->
+            <!-- Connection Status Tracking Panel -->
             <div class="status-container">
                 <div>
                     <h4 style="font-size: 13px; font-weight:600; color:var(--text-primary);">Supabase Connection Status</h4>
@@ -120,8 +120,10 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Gemini API Key *</label>
-                            <input type="password" id="fieldGeminiKey" name="geminiKey" class="form-input" placeholder="AIzaSy..." required>
+                            <label class="form-label">Gemini API Key (Optional)</label>
+                            <!-- Removed required attribute to allow database-only configurations -->
+                            <input type="password" id="fieldGeminiKey" name="geminiKey" class="form-input" placeholder="AIzaSy...">
+                            <span style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; display:block;">Only required when running live OCR document extractions.</span>
                         </div>
 
                         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px;">
@@ -149,9 +151,9 @@
                             <label class="form-label">Minimum Auto-Approve Confidence (%)</label>
                             <input type="range" id="fieldConfidence" name="confidence" min="50" max="100" value="90" style="accent-color: var(--primary); cursor: pointer;">
                             <div style="display:flex; justify-content:space-between; font-size:10px; color: var(--text-secondary); margin-top:4px;">
-                                <span>70% (Bypass validation easily)</span>
-                                <span>95% (Safe enterprise lock)</span>
-                            </div>
+                                    <span>70% (Bypass validation easily)</span>
+                                    <span>95% (Safe enterprise lock)</span>
+                                </div>
                         </div>
                     </div>
 
@@ -169,7 +171,6 @@
     <script>
         /**
          * Encapsulated Settings Page Controller
-         * Executes immediately upon router injection
          */
         (function() {
             const SettingsController = {
@@ -222,16 +223,14 @@
                     // URL Syntax Checker
                     const supabaseUrlRegex = /^https:\/\/[a-zA-Z0-9_-]+\.supabase\.co$/;
                     if (!supabaseUrlRegex.test(url)) {
-                        if (window.NotificationService) {
-                            window.NotificationService.showError('Invalid URL format. Must match https://project-id.supabase.co');
-                        }
+                        alert('Invalid URL format. Must match https://project-id.supabase.co');
                         return;
                     }
 
                     try {
                         localStorage.setItem('PROCESSWALLAH_SUPABASE_URL', url);
                         localStorage.setItem('PROCESSWALLAH_SUPABASE_KEY', key);
-                        localStorage.setItem('PROCESSWALLAH_GEMINI_KEY', gemini);
+                        localStorage.setItem('PROCESSWALLAH_GEMINI_KEY', gemini); // Persisted cleanly even if blank
                         localStorage.setItem('PROCESSWALLAH_OCR_MODEL', model);
                         localStorage.setItem('PROCESSWALLAH_CONFIDENCE_THRESHOLD', confidence);
                         localStorage.setItem('PROCESSWALLAH_AUTO_LEARNING', learning);
@@ -241,15 +240,11 @@
                             window.SupabaseConfig.initializeClient();
                         }
 
-                        if (window.NotificationService) {
-                            window.NotificationService.showSuccess('System configurations updated successfully');
-                        }
+                        alert('System configurations updated successfully');
                         this.verifyActiveConnection();
                     } catch (err) {
                         console.error("Local Storage Write Error:", err);
-                        if (window.NotificationService) {
-                            window.NotificationService.showError('Failed to save configuration details.');
-                        }
+                        alert('Failed to save configuration details.');
                     }
                 },
 
@@ -258,21 +253,15 @@
                     const key = document.getElementById('fieldSupabaseKey').value.trim();
 
                     if (!url || !key) {
-                        if (window.NotificationService) {
-                            window.NotificationService.showWarning('Please provide a URL and Anonymous API Key to run tests.');
-                        }
+                        alert('Please provide a URL and Anonymous API Key to run tests.');
                         return;
                     }
 
-                    if (window.NotificationService) {
-                        window.NotificationService.showInfo('Testing cloud database connection...');
-                    }
-                    
                     const dot = document.getElementById('statusIndicatorDot');
                     const text = document.getElementById('statusIndicatorText');
 
                     try {
-                        // Dynamically test endpoints using temporary sandbox Client instance
+                        // Dynamically test endpoints using temporary sandbox Client instance (Requires no Gemini configurations)
                         const tempClient = supabase.createClient(url, key);
                         const { error } = await tempClient
                             .from('customer_master')
@@ -283,17 +272,12 @@
 
                         dot.classList.add('active');
                         text.innerHTML = "🟢 Connected <span style='display:block; font-size:11px; font-weight:normal; color:#64748B;'>Database Reachable</span>";
-                        
-                        if (window.NotificationService) {
-                            window.NotificationService.showSuccess('Ping request successful. Cloud database connected.');
-                        }
+                        alert('Ping request successful. Cloud database connected.');
                     } catch (err) {
                         console.error("Connection link test failed:", err);
                         dot.classList.remove('active');
                         text.innerHTML = "🔴 Disconnected <span style='display:block; font-size:11px; font-weight:normal; color:#EF4444;'>Handshake Failed</span>";
-                        if (window.NotificationService) {
-                            window.NotificationService.showError(`Handshake Failed: ${err.message || 'Incorrect database permissions'}`);
-                        }
+                        alert(`Handshake Failed: ${err.message || 'Incorrect database permissions'}`);
                     }
                 },
 
