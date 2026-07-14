@@ -1,6 +1,6 @@
 /**
  * Universal OCR Workspace Engine
- * Version 1.0.0
+ * Version 1.0.1
  * Decoupled, configuration-driven UI generator
  */
 
@@ -19,7 +19,7 @@ class SalesOCRWorkspace {
                 title: 'Sales Invoice',
                 breadcrumb: 'Sales Department / Tax Invoice Inbound',
                 partyLabel: 'Customer Entity',
-                partyMaster: 'CUSTOMER_MASTER',
+                partyMaster: 'customer_master',
                 fields: [
                     { id: 'invNum', label: 'Invoice Number', type: 'text', value: 'INV-2025-0814', group: 'meta' },
                     { id: 'invDate', label: 'Invoice Date', type: 'date', value: '2025-01-24', group: 'meta' },
@@ -35,7 +35,7 @@ class SalesOCRWorkspace {
                 title: 'Purchase Invoice',
                 breadcrumb: 'Purchase Department / Supplier Bill Inbound',
                 partyLabel: 'Vendor Entity',
-                partyMaster: 'VENDOR_MASTER',
+                partyMaster: 'vendor_master',
                 fields: [
                     { id: 'billNum', label: 'Bill / Purchase Ref #', type: 'text', value: 'PO-8849-01', group: 'meta' },
                     { id: 'billDate', label: 'Invoiced Date', type: 'date', value: '2025-01-22', group: 'meta' },
@@ -51,7 +51,7 @@ class SalesOCRWorkspace {
                 title: 'Delivery Challan',
                 breadcrumb: 'Logistics Department / Waybill Inbound',
                 partyLabel: 'Consignee Entity',
-                partyMaster: 'CUSTOMER_MASTER',
+                partyMaster: 'customer_master',
                 fields: [
                     { id: 'challanNum', label: 'Challan Number', type: 'text', value: 'CH-991202', group: 'meta' },
                     { id: 'challanDate', label: 'Dispatched Date', type: 'date', value: '2025-01-20', group: 'meta' },
@@ -66,7 +66,7 @@ class SalesOCRWorkspace {
                 title: 'Debit Note',
                 breadcrumb: 'Receivables / Debit Adjustments',
                 partyLabel: 'Debtor Customer',
-                partyMaster: 'CUSTOMER_MASTER',
+                partyMaster: 'customer_master',
                 fields: [
                     { id: 'debitNum', label: 'Debit Note Ref', type: 'text', value: 'DN-2025-0012', group: 'meta' },
                     { id: 'debitDate', label: 'Adjustment Date', type: 'date', value: '2025-01-21', group: 'meta' },
@@ -79,7 +79,7 @@ class SalesOCRWorkspace {
                 title: 'Credit Note',
                 breadcrumb: 'Payables / Supplier Claims Adjustment',
                 partyLabel: 'Creditor Vendor',
-                partyMaster: 'VENDOR_MASTER',
+                partyMaster: 'vendor_master',
                 fields: [
                     { id: 'creditNum', label: 'Credit Note Ref', type: 'text', value: 'CN-8819A2', group: 'meta' },
                     { id: 'creditDate', label: 'Posting Date', type: 'date', value: '2025-01-23', group: 'meta' },
@@ -87,10 +87,6 @@ class SalesOCRWorkspace {
                     { id: 'taxRate', label: 'GST Bracket', type: 'text', value: 'GST18' }
                 ],
                 annotations: []
-            },
-            'masters': {
-                title: "Masters Placeholder",
-                fields: []
             }
         };
     }
@@ -146,7 +142,7 @@ class SalesOCRWorkspace {
                 </div>
                 <div class="pipeline-indicators" id="pipelineStatusDefault">
                     <span class="status-indicator online"></span>
-                    <span class="status-msg-lbl">Awaiting dynamic ingestion stream...</span>
+                    <span class="status-text" id="statusMessageLabel">Awaiting dynamic ingestion stream...</span>
                 </div>
             </div>
         `;
@@ -206,9 +202,7 @@ class SalesOCRWorkspace {
             <div class="form-group highlight-confidence">
                 <label class="form-label">${this.activeConfig.partyLabel}</label>
                 <select class="form-input" id="fieldCustomer" style="background: none;">
-                    <option value="VND-00102">Acme Industrial Supplies (${this.activeConfig.partyMaster === 'VENDOR_MASTER' ? 'VND-00102' : 'CST-00341'})</option>
-                    <option value="VND-00109">Nvidia APAC Division (${this.activeConfig.partyMaster === 'VENDOR_MASTER' ? 'VND-00109' : 'CST-00109'})</option>
-                    <option value="VND-00892">Tesla Motors Pvt Ltd (${this.activeConfig.partyMaster === 'VENDOR_MASTER' ? 'VND-00892' : 'CST-00892'})</option>
+                    <!-- Master data loaded dynamically -->
                 </select>
             </div>
         `;
@@ -311,9 +305,6 @@ class SalesOCRWorkspace {
      */
     bindWorkspaceEvents() {
         const dropZone = document.getElementById('dropZone');
-        const progressContainer = document.getElementById('progressContainer');
-        const pipelineDefault = document.getElementById('pipelineStatusDefault');
-        const progressBar = document.getElementById('progressBar');
         const fileInput = document.getElementById('fileInput');
 
         if (dropZone) {
@@ -332,13 +323,13 @@ class SalesOCRWorkspace {
                 e.preventDefault();
                 dropZone.style.borderColor = 'var(--border-color)';
                 dropZone.style.backgroundColor = 'transparent';
-                this.simulateUpload();
+                this.handleOcrExecutionTrigger();
             });
         }
 
         if (fileInput) {
             fileInput.addEventListener('change', () => {
-                this.simulateUpload();
+                this.handleOcrExecutionTrigger();
             });
         }
 
@@ -373,7 +364,7 @@ class SalesOCRWorkspace {
                 <td class="cell-total-value">$100.00</td>
             `;
             tbody.appendChild(row);
-            Toast.show('Item ledger line added', 'success');
+            alert('Item ledger line added');
         });
 
         // Download JSON representation
@@ -392,18 +383,46 @@ class SalesOCRWorkspace {
             document.body.appendChild(downloadAnchor);
             downloadAnchor.click();
             downloadAnchor.remove();
-            Toast.show('JSON extraction payload downloaded successfully', 'info');
+            alert('JSON extraction payload downloaded successfully');
         });
 
         // Validation sync events
         document.getElementById('btnApproveSync').addEventListener('click', () => {
-            Toast.show('Acquiring write lock... Record successfully synced to Google Sheets', 'success');
+            alert('Acquiring write lock... Record successfully synced to Google Sheets');
         });
 
         document.getElementById('btnSaveDraft').addEventListener('click', () => {
-            Toast.show('State written to DOCUMENT_MASTER staging queue', 'info');
+            alert('State written to DOCUMENT_MASTER staging queue');
         });
-    }
+
+        // Dynamic check of Gemini API Key availability during reprocessing trigger
+        const reprocessBtn = document.getElementById('btnReprocess');
+        if (reprocessBtn) {
+            reprocessBtn.addEventListener('click', () => {
+                const geminiKey = localStorage.getItem('PROCESSWALLAH_GEMINI_KEY') || '';
+                if (!geminiKey) {
+                    alert('Gemini API Key missing. Please configure your API Key in the Settings dashboard to execute live OCR extractions.');
+                    return;
+                }
+                alert('Retrying Gemini Vision OCR call with prompt v1.4...');
+            });
+        }
+
+        // Initialize masters selection lookup dynamically based on connected database
+        this.loadFormMastersData();
+    },
+
+    /**
+     * Dynamic check of Gemini API Key availability during initial Ingestion drop
+     */
+    handleOcrExecutionTrigger() {
+        const geminiKey = localStorage.getItem('PROCESSWALLAH_GEMINI_KEY') || '';
+        if (!geminiKey) {
+            alert('Gemini API Key missing. Please configure your API Key in the Settings dashboard to execute live OCR extractions.');
+            return;
+        }
+        this.simulateUpload();
+    },
 
     simulateUpload() {
         const progressContainer = document.getElementById('progressContainer');
@@ -420,9 +439,53 @@ class SalesOCRWorkspace {
             document.getElementById('uploadPercentage').innerText = progress + '%';
             if (progress >= 100) {
                 clearInterval(interval);
-                Toast.show('File parsed successfully with Gemini v1.4', 'success');
+                alert('File parsed successfully with Gemini v1.4');
             }
         }, 120);
+    },
+
+    async loadFormMastersData() {
+        const select = document.getElementById('fieldCustomer');
+        if (!select) return;
+
+        select.innerHTML = '<option value="">Loading masters...</option>';
+
+        const globalScriptUrl = localStorage.getItem('PROCESSWALLAH_SUPABASE_URL') || '';
+        if (!globalScriptUrl) {
+            select.innerHTML = `<option value="">Database offline (Using default)</option>
+                                <option value="CST-MOCK">Acme Industrial Supplies (CST-00341)</option>`;
+            return;
+        }
+
+        try {
+            // Read from dynamic profiles to populate active dropdown options
+            const { data, error } = await supabaseClient
+                .from(this.activeConfig.partyMaster)
+                .select('*')
+                .is('deleted_at', null);
+
+            if (error) throw error;
+
+            select.innerHTML = '';
+            if (!data || data.length === 0) {
+                select.innerHTML = '<option value="">No master records found</option>';
+                return;
+            }
+
+            data.forEach(row => {
+                const code = row.customer_code || row.vendor_code || '';
+                const name = row.customer_name || row.vendor_name || '';
+                const id = row.customer_id || row.vendor_id || '';
+                const option = document.createElement('option');
+                option.value = id;
+                option.innerText = `${name} (${code})`;
+                select.appendChild(option);
+            });
+
+        } catch (e) {
+            console.error("Masters load failed:", e);
+            select.innerHTML = '<option value="">Database lookup error</option>';
+        }
     }
 }
 
